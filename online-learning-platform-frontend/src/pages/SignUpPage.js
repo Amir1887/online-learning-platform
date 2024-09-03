@@ -1,11 +1,5 @@
-import React from 'react'
+import { SignUp } from '@clerk/clerk-react'
 
-function SignUpPage() {
-  return (
-    <div>
-      sign up...
-    </div>
-  )
+export default function SignUpPage() {
+  return <SignUp path="/sign-up" />
 }
-
-export default SignUpPage

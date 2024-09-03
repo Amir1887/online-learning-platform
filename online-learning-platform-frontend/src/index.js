@@ -1,17 +1,50 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+// Import the layouts
+import RootLayout from './layouts/root-layout';
+import DashboardLayout from './layouts/dashboard-layout';
+
+// Import the components
+import HomePage from './pages/HomePage';
+import ContactPage from './pages/ContactPage';
+import ProfilePage from './pages/ProfilePage';
+import AboutPage from './pages/AboutPage';
+import CoursesPage from './pages/CoursesPage';
+import CoursePage from './pages/CoursePage ';
+import SignInPage from './pages/SignInPage';
+import SignUpPage from './pages/SignUpPage';
+import DashboardPage from './pages/DashboardPage';
+import InvoicesPage from './pages/InvoicesPage';
+
+const router = createBrowserRouter([
+  {
+    element: <RootLayout />,
+    children: [
+      { path: '/', element: <HomePage /> },
+      { path: '/contact', element: <ContactPage /> },
+      { path: '/profile', element: <ProfilePage /> },
+      { path: '/courses', element: <CoursesPage /> },
+      { path: '/course/:id', element: <CoursePage /> },
+      { path: '/about', element: <AboutPage /> },
+      { path: '/sign-in/*', element: <SignInPage /> },
+      { path: '/sign-up/*', element: <SignUpPage /> },
+      {
+        element: <DashboardLayout />,
+        path: 'dashboard',
+        children: [
+          { path: '/dashboard', element: <DashboardPage /> },
+          { path: '/dashboard/invoices', element: <InvoicesPage /> },
+        ],
+      },
+    ],
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
