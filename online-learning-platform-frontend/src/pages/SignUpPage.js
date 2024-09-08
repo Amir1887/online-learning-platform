@@ -1,5 +1,9 @@
 import { SignUp } from '@clerk/clerk-react'
 
 export default function SignUpPage() {
-  return <SignUp path="/sign-up" />
+  return (
+    <div className='flex items-center justify-center p-4'>
+      <SignUp path="/sign-up" />
+    </div>
+  )
 }
