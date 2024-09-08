@@ -12,3 +12,84 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String?
+  courses     Course[]     @relation("UserCourses")
+  enrollments Enrollment[]
+  submissions Submission[]
+  reviews     Review[]
+
+}
+
+model Course {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  users       User[]       @relation("UserCourses")
+  enrollments Enrollment[]
+  lessons     Lesson[]
+  assignments Assignment[]
+  reviews     Review[]     
+  category    Category[]     
+  
+}
+
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  courseId  Int
+  user      User     @relation(fields: [userId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+
+}
+
+model Lesson {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+
+}
+
+model Assignment {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  submission Submission[]
+ 
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  courses   Course[]
+ 
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  content   String
+  rating    Int
+  userId    Int
+  courseId  Int
+  user      User     @relation(fields: [userId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+
+}
+
+model Submission {
+  id            Int        @id @default(autoincrement())
+  content       String
+  assignmentId  Int
+  userId        Int
+  assignment    Assignment @relation(fields: [assignmentId], references: [id])
+  user          User       @relation(fields: [userId], references: [id])
+ 
+}
