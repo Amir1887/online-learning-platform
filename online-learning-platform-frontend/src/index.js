@@ -18,6 +18,7 @@ import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import DashboardPage from './pages/DashboardPage';
 import InvoicesPage from './pages/InvoicesPage';
+import UpdateProfilePage from './pages/UpdateProfilePage';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: '/', element: <HomePage /> },
       { path: '/contact', element: <ContactPage /> },
       { path: '/profile', element: <ProfilePage /> },
+      { path: '/update-profile', element: <UpdateProfilePage /> },
       { path: '/courses', element: <CoursesPage /> },
       { path: '/course/:id', element: <CoursePage /> },
       { path: '/about', element: <AboutPage /> },

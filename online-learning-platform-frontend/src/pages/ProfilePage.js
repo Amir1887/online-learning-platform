@@ -1,21 +1,55 @@
-import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/clerk-react';
+import { Link } from 'react-router-dom';
 
-function ProfilePage() {
+const ProfilePage = () => {
+  const { user, isLoaded } = useUser();
+  // console.log("userinfo..",user);
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return <div>You need to be logged in to view this page.</div>;
+  }
+
   return (
-    <div className='flex items-center justify-center text-primary-dark mt-4'>
-      <h1 className='text-4xl'>profile page..</h1>
-      <div >
+    <div>
+      
+      <h1 className="text-3xl ml-2 mt-4">Your Profile</h1>
+
+    <div className="p-8 max-w-2xl mx-auto">
+      <div className="mb-6 flex gap-2 ">
+        <p className="text-xl font-semibold">Name:</p>
+        <p className="text-xl">{user.username || 'No name provided'}</p>
+
+            <div className="w-12 h-12" >
             <SignedIn>
               <UserButton />
             </SignedIn>
             <SignedOut>
               <Link to="/sign-in">Sign In</Link>
             </SignedOut>
-          </div>
+            </div>
+                    
+      </div>
+      <div className="mb-6">
+        <p className="text-xl font-semibold">Email:</p>
+        <p className="text-lg">{user.primaryEmailAddress.emailAddress}</p>
+      </div>
+ 
+      <div>
+        <Link to="/update-profile">
+          <button className="p-2 bg-blue-500 text-white rounded">Update Profile</button>
+        </Link>
+      </div>
     </div>
-  )
-}
+    </div>
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;
+
+
+
