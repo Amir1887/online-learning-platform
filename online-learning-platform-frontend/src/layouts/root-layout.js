@@ -1,5 +1,5 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { ClerkProvider, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
+import {  Outlet, useNavigate } from 'react-router-dom';
+import { ClerkProvider } from '@clerk/clerk-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -20,23 +20,11 @@ export default function RootLayout() {
       publishableKey={PUBLISHABLE_KEY}
     >
       <div className="flex flex-col min-h-screen">
-        <Header className="flex-none" >
-          <div>
-            <div>
-              <p>Clerk + React + React Router App</p>
-            </div>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            <SignedOut>
-              <Link to="/sign-in">Sign In</Link>
-            </SignedOut>
-          </div>
-        </Header>
         <main className="flex-grow">
           <Outlet />
         </main>
         <Footer className="flex-none" />
+
       </div>
     </ClerkProvider>
   );
