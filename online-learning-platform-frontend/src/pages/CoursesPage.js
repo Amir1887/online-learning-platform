@@ -89,15 +89,23 @@ const CoursesPage = () => {
     </div>
   );
 
-  // Component for searching courses using Algolia
-  const SearchCourses = () => (
-    <div className="w-full max-w-4xl mx-auto">
-      <InstantSearch searchClient={searchClient} indexName="proud_AMIR">
-        <SearchBox translations={{ placeholder: 'Search for courses...' }} />
-        <Hits hitComponent={CourseHit} />
-      </InstantSearch>
-    </div>
-  );
+// Modify the SearchCourses component to hide results until search query exists
+const SearchCourses = () => (
+  <div className="w-full max-w-4xl mx-auto">
+    <InstantSearch searchClient={searchClient} indexName="proud_AMIR">
+      <SearchBox translations={{ placeholder: 'Search for courses...' }} />
+      <CustomHits />
+    </InstantSearch>
+  </div>
+);
+
+// Conditionally render Hits if search query exists
+const CustomHits = connectStateResults(({ searchState, searchResults }) => {
+  const hasResults = searchResults && searchResults.nbHits !== 0;
+  const hasQuery = searchState && searchState.query;
+
+  return hasQuery && hasResults ? <Hits hitComponent={CourseHit} /> : null;
+});
 
   return (
     <div className="flex flex-col items-center">
