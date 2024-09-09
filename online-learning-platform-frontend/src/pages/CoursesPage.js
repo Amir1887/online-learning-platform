@@ -1,20 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import algoliasearch from 'algoliasearch'; // this is the version in which saveObjects method work.. 
+
+
+import { InstantSearch, SearchBox, Hits, Highlight, connectStateResults  } from 'react-instantsearch-dom';
+
+
+const appID = "LBK71E9PXR";
+
+const apiKey = "91a12ffce3757bc4e05acc55bf0fbcab";
+
+
+const searchClient = algoliasearch(appID, apiKey);
+
+
+
+// Initialize the Algolia index
+const index = searchClient.initIndex('proud_AMIR');
+// console.log("here is the index..",index)
+
+
+// Function to upload data to Algolia from backend API
+const uploadDataToAlgolia = async () => {
+  try {
+   // Fetch courses from your backend
+   const res = await axios.get('http://localhost:4000/courses');
+   const courses = res.data;
+  //  console.log("here is the courses ",courses)
+
+
+    // Map data to match Algolia's format (ensure each course has an `objectID`)
+    const formattedCourses = courses.map(course => ({
+      objectID: course.id,  // Algolia requires a unique `objectID`
+      title: course.title,
+      description: course.description,
+    }));
+
+    // console.log("formatted courses ..", formattedCourses);
+
+    // Upload the formatted data to Algolia 
+    const algoliaResponse = await index.saveObjects(formattedCourses, { autoGenerateObjectIDIfNotExist: true });
+
+    // console.log("after uploading", algoliaResponse);
+
+    console.log('Courses successfully uploaded to Algolia:', algoliaResponse);
+  } catch (error) {
+    console.error('Error uploading data to Algolia:', error);
+  }
+};
 
 const CoursesPage = () => {
   const [categories, setCategories] = useState([]);
   const [courses, setCourses] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Fetch categories
+  // Fetch categories from the backend
   useEffect(() => {
-    axios.get('http://localhost:4000/categories') // Adjust the URL as needed
+    axios.get('http://localhost:4000/categories')
       .then(res => setCategories(res.data))
       .catch(err => console.error(err));
   }, []);
 
-  // Fetch courses when category is selected
+  // Fetch courses when a category is selected
   useEffect(() => {
     if (selectedCategory) {
       axios.get(`http://localhost:4000/courses?category=${selectedCategory.id}`)
@@ -23,14 +71,45 @@ const CoursesPage = () => {
     }
   }, [selectedCategory]);
 
+  // Upload data to Algolia when the component mount 
+  useEffect(() => {
+    uploadDataToAlgolia();
+  }, []);
+  
+  // Component to render search results
+  const CourseHit = ({ hit }) => (
+    <div className="p-4 border rounded">
+      <h3 className="text-xl">
+        <Highlight attribute="title" hit={hit} />
+      </h3>
+      <p className="text-gray-600">
+        <Highlight attribute="description" hit={hit} />
+      </p>
+      <Link to={`/course/${hit.objectID}`} className="text-blue-500 mt-2 block">More Info</Link>
+    </div>
+  );
+
+  // Component for searching courses using Algolia
+  const SearchCourses = () => (
+    <div className="w-full max-w-4xl mx-auto">
+      <InstantSearch searchClient={searchClient} indexName="proud_AMIR">
+        <SearchBox translations={{ placeholder: 'Search for courses...' }} />
+        <Hits hitComponent={CourseHit} />
+      </InstantSearch>
+    </div>
+  );
+
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-3xl mb-6">Courses</h1>
 
+      {/* Search bar with Algolia */}
+      <SearchCourses />
+
       {/* Categories */}
       <div className="flex flex-wrap gap-4 mb-6">
         {categories.map(category => (
-          <button 
+          <button
             key={category.id}
             onClick={() => setSelectedCategory(category)}
             className={`p-2 border rounded ${selectedCategory?.id === category.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
