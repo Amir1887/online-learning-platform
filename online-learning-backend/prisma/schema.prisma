@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,7 +6,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 model User {
   id          Int          @id @default(autoincrement())
@@ -25,7 +18,16 @@ model User {
 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-
+}
+model Author {
+  id           Int          @id @default(autoincrement())
+  name         String
+  image        String?
+  courses      Course[]     @relation("AuthorCourses") 
+  totalReviews Int          @default(0)
+  
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model Course {
@@ -36,13 +38,18 @@ model Course {
   enrollments Enrollment[]
   lessons     Lesson[]
   assignments Assignment[]
-  reviews     Review[]     
+  reviews     Review[]
+  
   categoryId  Int
   category    Category   @relation(fields: [categoryId], references: [id])
 
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  authorId    Int
+  author      Author     @relation(fields: [authorId], references: [id], name: "AuthorCourses") 
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
+
 
 model Enrollment {
   id        Int      @id @default(autoincrement())
@@ -52,7 +59,6 @@ model Enrollment {
   course    Course   @relation(fields: [courseId], references: [id])
 
   createdAt   DateTime @default(now())
-
 }
 
 model Lesson {
@@ -63,7 +69,6 @@ model Lesson {
   course    Course   @relation(fields: [courseId], references: [id])
 
    createdAt   DateTime @default(now())
-
 }
 
 model Assignment {
@@ -80,7 +85,6 @@ model Category {
   id        Int      @id @default(autoincrement())
   name      String
   courses   Course[]
- 
 }
 
 model Review {
@@ -91,7 +95,6 @@ model Review {
   courseId  Int
   user      User     @relation(fields: [userId], references: [id])
   course    Course   @relation(fields: [courseId], references: [id])
-
 }
 
 model Submission {
@@ -101,5 +104,5 @@ model Submission {
   userId        Int
   assignment    Assignment @relation(fields: [assignmentId], references: [id])
   user          User       @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
+  createdAt     DateTime   @default(now())
 }
