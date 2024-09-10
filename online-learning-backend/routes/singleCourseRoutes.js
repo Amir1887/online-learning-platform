@@ -13,12 +13,18 @@ const pool = new Pool({
   port: 5432,
 });
 
-// GET /courses/:id
+// GET /course/:id
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query('SELECT * FROM "Course" WHERE id = $1', [id]);
+    // We query the Course and join the Author table to fetch the author's name, image, and total reviews alongside the course data.                                                       
+    const result = await pool.query(
+      `SELECT c.*, a.name as author_name, a.image as author_image, a."totalReviews"  as author_totalReviews 
+       FROM "Course" c 
+       JOIN "Author" a ON c."authorId" = a.id 
+       WHERE c.id = $1`,
+       [id]);
     console.log("query result", result);
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Course not found' });
