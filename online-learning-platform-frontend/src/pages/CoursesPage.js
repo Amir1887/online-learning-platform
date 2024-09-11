@@ -91,13 +91,17 @@ const CoursesPage = () => {
 
 // Modify the SearchCourses component to hide results until search query exists
 const SearchCourses = () => (
-  <div className="w-full max-w-4xl mx-auto">
+  <div className="w-full border border-gray-300 hover:border-blue-500 rounded-lg shadow-md mb-6 p-4 max-w-4xl mx-auto transition-all duration-300 ease-in-out">
     <InstantSearch searchClient={searchClient} indexName="proud_AMIR">
-      <SearchBox translations={{ placeholder: 'Search for courses...' }} />
+      <SearchBox
+        className="p-3 w-full text-lg border-none rounded-md bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+        translations={{ placeholder: 'Search for courses...' }}
+      />
       <CustomHits />
     </InstantSearch>
   </div>
 );
+
 
 // Conditionally render Hits if search query exists
 const CustomHits = connectStateResults(({ searchState, searchResults }) => {
