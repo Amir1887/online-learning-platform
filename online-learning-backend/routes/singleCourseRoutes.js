@@ -46,22 +46,39 @@ router.get('/:id', async (req, res) => {
     const submissionsQuery = ` 
     SELECT 
       s.content AS submission_content, 
+      s.id AS submission_id, 
       u.name AS user_name,
       a.title AS assignment_title,
-      a.content AS assignment_content
+      a.content AS assignment_content,
+      s."assignmentId" AS assignment_id
     FROM "Submission" s
     JOIN "User" u ON s."userId" = u.id
     JOIN "Assignment" a ON s."assignmentId" = a.id
-    WHERE s."courseId" = $1
+    WHERE a."courseId" = $1
   `;
   
-  
+  // Query to get assignments of course
+  const assignmentQuery = `
+    SELECT a.title, a.content
+    FROM "Assignment" as a
+    WHERE "courseId" = $1
+  `
+    
+  // Query to get review of course
+  const reviewsQuery = `
+  SELECT r.content AS review_content, r.rating, u.name AS reviewer_name
+  FROM "Review" r
+  JOIN "User" u ON r."userId" = u.id
+  WHERE r."courseId" = $1
+`;
   // we are executing three database queries (courseQuery, usersQuery, and submissionsQuery) concurrently. Instead of running them sequentially (one after the other)
   //The second argument [id] is passed to the query to fill in the placeholder (a WHERE clause that filters the course by its id)
-    const [courseResult, usersResult, submissionsResult] = await Promise.all([
+    const [courseResult, usersResult, submissionsResult, assignmentResult, reviewResult] = await Promise.all([
       pool.query(courseQuery, [id]),
       pool.query(usersQuery, [id]),
       pool.query(submissionsQuery, [id]),
+      pool.query(assignmentQuery, [id]),
+      pool.query(reviewsQuery, [id]),
  
     ]);
 
@@ -78,6 +95,8 @@ router.get('/:id', async (req, res) => {
 
     //This adds the array of submissions (retrieved by the submissionsQuery) to the courseData object under the property submissions.
     courseData.submissions = submissionsResult.rows;
+    courseData.assignments = assignmentResult.rows;
+    courseData.reviews = reviewResult.rows;
 
     res.json(courseData);
   } catch (error) {

@@ -40,7 +40,7 @@ const CoursePage = () => {
 
     
           {/* Author Information */}
-          <div className="flex items-center gap-6 p-4 border rounded-lg shadow-lg">
+        <div className="flex items-center gap-6 p-4 border rounded-lg shadow-lg">
         <img
           src={course.author_image}  
           alt={course.author_name}
@@ -61,27 +61,40 @@ const CoursePage = () => {
     <div className="max-w-3xl  p-6">
 
       {/* Add more details like lessons or assignments */}
-      <div className="mt-6">
-        <h2 className="text-2xl font-semibold mb-4">Lessons</h2>
-        <ul className="list-disc pl-6">
-          {course.lessons && course.lessons.length > 0 ? (
-            course.lessons.map(lesson => (
-              <li key={lesson.id} className="mb-2">
-                {lesson.title} - {lesson.content}
-              </li>
-            ))
-          ) : (
-            <p>No lessons available for this course.</p>
-          )}
-        </ul>
-      </div>
+
+{/* Lessons Section */}
+<div className="my-8">
+  <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
+    Lessons
+  </h2>
+  {course.lessons && course.lessons.length > 0 ? (
+    <div className="space-y-4 ml-7">
+      {course.lessons.map((lesson, index) => (
+        <div
+          key={lesson.id}
+          className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400"
+        >
+          <h3 className="font-semibold text-xl text-blue-600">
+            Lesson {index + 1}: {lesson.title}
+          </h3>
+          <p className="text-gray-600 mt-2">{lesson.content}</p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-gray-500">No lessons available for this course.</p>
+  )}
+</div>
+
 {/* USERS enrolled to this course */}
 <div className="my-8">
   {course.enrolledUsers && course.enrolledUsers.length > 0 ? (
-    <div className="space-y-4">
+    <div>
       <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
         Enrolled Users for this Course
       </h1>
+    <div className="space-y-4 ml-7">
+  
       {course.enrolledUsers.map((user, index) => (
         <div
           key={index}
@@ -96,20 +109,39 @@ const CoursePage = () => {
         </div>
       ))}
     </div>
+    </div>
   ) : (
     <p className="text-gray-500">No enrolled users for this course!</p>
   )}
 </div>
 
+{/* ASSIGNMENT Section */}
+<div>
+  <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Assignments</h2>
+<div className="my-8 ml-7">
+  {course.assignments && course.assignments.length > 0 ? (
+    <div className="space-y-4">
+      {course.assignments.map((assignment, index) => (
+        <div key={index} className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400">
+          <h3 className="font-semibold text-xl text-blue-600">Assignment: {assignment.title}</h3>
+          <p className="text-gray-600 mt-2">{assignment.content}</p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-gray-500">No assignments for this course yet.</p>
+  )}
+</div>
+</div>
 
-    
+
 {/* Submissions Section */}
 <div className="my-8">
   <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
     Submissions
   </h2>
   {course.submissions && course.submissions.length > 0 ? (
-    <div className="space-y-4">
+    <div className="space-y-4 ml-7">
       {course.submissions.map((submission, index) => (
         <div
           key={index}
@@ -131,8 +163,30 @@ const CoursePage = () => {
       ))}
     </div>
   ) : (
-    <p className="text-gray-500">No submissions available for this course.</p>
+    <p className="text-gray-500 ml-7">No submissions available for this course.</p>
   )}
+</div>
+
+
+
+{/* RATINGS Section */}
+<div>
+  <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Ratings</h2>
+<div className="my-8 ml-7">
+  {course.reviews && course.reviews.length > 0 ? (
+    <div className="space-y-4">
+      {course.reviews.map((rating, index) => (
+        <div key={index} className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400">
+          <h3 className="font-semibold text-xl text-blue-600">Rating: {rating.rating}</h3>
+          <p className="text-gray-600 mt-2">Review: {rating.review_content}</p>
+          <p className="text-gray-700 mt-1">Submitted by: {rating.reviewer_name}</p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-gray-500">No ratings available for this course.</p>
+  )}
+</div>
 </div>
 
     </div>
