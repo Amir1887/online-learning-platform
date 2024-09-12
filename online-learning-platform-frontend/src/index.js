@@ -16,9 +16,10 @@ import CoursesPage from './pages/CoursesPage';
 import CoursePage from './pages/CoursePage ';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
-import DashboardPage from './pages/DashboardPage';
+// import DashboardPage from './pages/DashboardPage';
 import InvoicesPage from './pages/InvoicesPage';
 import UpdateProfilePage from './pages/UpdateProfilePage';
+import UserRoleCheck from './UserRoleCheck';
 
 const router = createBrowserRouter([
   {
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         path: 'dashboard',
         children: [
-          { path: '/dashboard', element: <DashboardPage /> },
+          { path: '/dashboard', element: <UserRoleCheck /> },
           { path: '/dashboard/invoices', element: <InvoicesPage /> },
         ],
       },

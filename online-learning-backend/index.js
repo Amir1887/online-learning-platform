@@ -6,6 +6,9 @@ const categoriesRouter = require('./routes/categories');
 const coursesRouter = require('./routes/courses');
 const courseRouter = require('./routes/singleCourseRoutes');
 const uploadPhotoRouter = require('./routes/uploadPhotoRoute'); 
+const checkUserTypeRouter = require('./routes/authRoutes'); 
+
+
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -24,6 +27,7 @@ app.use('/categories', categoriesRouter);
 app.use('/courses', coursesRouter);
 app.use('/course', courseRouter);
 app.use('/upload-photo', uploadPhotoRouter); 
+app.use('/check-user-type', checkUserTypeRouter); 
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
