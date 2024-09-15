@@ -16,7 +16,6 @@ import CoursesPage from './pages/CoursesPage';
 import CoursePage from './pages/CoursePage ';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
-// import DashboardPage from './pages/DashboardPage';
 import InvoicesPage from './pages/InvoicesPage';
 import UpdateProfilePage from './pages/UpdateProfilePage';
 import UserRoleCheck from './UserRoleCheck';
@@ -25,21 +24,29 @@ const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
-      { path: '/', element: <HomePage /> },
+      // Public Routes (no need to be under /dashboard)
+      { path: '/', element: <HomePage /> }, // Root-level routes
       { path: '/contact', element: <ContactPage /> },
-      { path: '/profile', element: <ProfilePage /> },
-      { path: '/update-profile', element: <UpdateProfilePage /> },
-      { path: '/courses', element: <CoursesPage /> },
-      { path: '/course/:id', element: <CoursePage /> },
       { path: '/about', element: <AboutPage /> },
       { path: '/sign-in/*', element: <SignInPage /> },
       { path: '/sign-up/*', element: <SignUpPage /> },
+
+      // Dashboard Layout (Nested routes inside /dashboard)
       {
+        path: '/dashboard', // Dashboard prefix
         element: <DashboardLayout />,
-        path: 'dashboard',
         children: [
-          { path: '/dashboard', element: <UserRoleCheck /> },
-          { path: '/dashboard/invoices', element: <InvoicesPage /> },
+          { path: '', element: <UserRoleCheck /> }, // Dashboard root
+          { path: 'home', element: <HomePage /> },  // Accessible as /dashboard/home
+          { path: 'courses', element: <CoursesPage /> },  // Accessible as /dashboard/courses
+          { path: 'course/:id', element: <CoursePage /> },  // Accessible as /dashboard/course/:id
+          { path: 'about', element: <AboutPage /> },  // Accessible as /dashboard/about
+          { path: 'profile', element: <ProfilePage /> },  // Accessible as /dashboard/profile
+          { path: 'update-profile', element: <UpdateProfilePage /> },  // Accessible as /dashboard/update-profile
+          { path: 'invoices', element: <InvoicesPage /> },  // Accessible as /dashboard/invoices
+          { path: 'contact', element: <ContactPage /> },  // Accessible as /dashboard/contact
+          // { path: '*', element: <NotFoundPage /> },
+
         ],
       },
     ],

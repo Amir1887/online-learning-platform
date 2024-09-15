@@ -25,7 +25,7 @@ const index = searchClient.initIndex('proud_AMIR');
 const uploadDataToAlgolia = async () => {
   try {
    // Fetch courses from your backend
-   const res = await axios.get('http://localhost:4000/courses');
+   const res = await axios.get('http://localhost:4000/dashboard/courses');
    const courses = res.data;
   //  console.log("here is the courses ",courses)
 
@@ -57,7 +57,7 @@ const CoursesPage = () => {
 
   // Fetch categories from the backend
   useEffect(() => {
-    axios.get('http://localhost:4000/categories')
+    axios.get('http://localhost:4000/dashboard/categories')
       .then(res => setCategories(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -65,7 +65,7 @@ const CoursesPage = () => {
   // Fetch courses when a category is selected
   useEffect(() => {
     if (selectedCategory) {
-      axios.get(`http://localhost:4000/courses?category=${selectedCategory.id}`)
+      axios.get(`http://localhost:4000/dashboard/courses?category=${selectedCategory.id}`)
         .then(res => setCourses(res.data))
         .catch(err => console.error(err));
     }
@@ -85,7 +85,7 @@ const CoursesPage = () => {
       <p className="text-gray-600">
         <Highlight attribute="description" hit={hit} />
       </p>
-      <Link to={`/course/${hit.objectID}`} className="text-blue-500 mt-2 block">More Info</Link>
+      <Link to={`/dashboard/course/${hit.objectID}`} className="text-blue-500 mt-2 block">More Info</Link>
     </div>
   );
 
@@ -137,7 +137,7 @@ const CustomHits = connectStateResults(({ searchState, searchResults }) => {
           <h2 className="text-2xl mb-4 text-center">Courses in {selectedCategory.name}</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {courses.map(course => (
-              <Link key={course.id} to={`/course/${course.id}`} className="p-4 border rounded">
+              <Link key={course.id} to={`/dashboard/course/${course.id}`} className="p-4 border rounded">
                 <h3 className="text-xl">{course.title}</h3>
                 <p className="text-gray-600">{course.description}</p>
                 <p className="text-blue-500 mt-2">More Info</p>

@@ -8,8 +8,8 @@ function Header() {
   return (
     <div className='flex items-center justify-center mt-4 text-primary-dark'>
       <ul className='flex  items-center gap-8 mt-6 text-primary text-xl '>
-          <li className={classes}><Link to={"/courses"}>Courses</Link></li>
-          <li className={classes}><Link to={"/profile"}>Profile</Link></li>
+          <li className={classes}><Link to={"/dashboard/courses"}>Courses</Link></li>
+          <li className={classes}><Link to={"/dashboard/profile"}>Profile</Link></li>
           <li className={classes}><Link to={"/about"}>About</Link></li>
           <li className={classes}><Link to={"/contact"}>Contact</Link></li>
           {isSignedIn && (

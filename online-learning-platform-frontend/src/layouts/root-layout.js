@@ -1,15 +1,22 @@
 import {  Outlet, useNavigate } from 'react-router-dom';
 import { ClerkProvider } from '@clerk/clerk-react';
-import Header from '../components/Header';
+
 import Footer from '../components/Footer';
 
 const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
+
+// default to /dashboard
+const clerkConfig = {
+  signInRedirectUrl: process.env.REACT_APP_SIGN_IN_REDIRECT_URL || '/dashboard',
+  signInFallbackRedirectUrl: process.env.REACT_APP_SIGN_IN_FALLBACK_REDIRECT_URL || '/dashboard',
+};
+
 
 if (!PUBLISHABLE_KEY) {
   throw new Error('Missing Publishable Key');
 }
 
-//This component acts as the root layout
+//This component acts as the root layout(It's a wrapper for the whole app, providing the Clerk context.)
 export default function RootLayout() {
   const navigate = useNavigate();
 
@@ -18,7 +25,9 @@ export default function RootLayout() {
       routerPush={(to) => navigate(to)}
       routerReplace={(to) => navigate(to, { replace: true })}
       publishableKey={PUBLISHABLE_KEY}
-    >
+      {...clerkConfig} // Use environment variable(recommended in docs)
+      >
+
       <div className="flex flex-col min-h-screen">
         <main className="flex-grow">
           <Outlet />

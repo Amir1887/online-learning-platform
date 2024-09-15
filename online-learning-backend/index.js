@@ -23,8 +23,8 @@ app.use(cors({
 app.use(express.static('uploads')); // Serve static files (uploaded images)
 
 // Use route handlers
-app.use('/categories', categoriesRouter);
-app.use('/courses', coursesRouter);
+app.use('/dashboard/categories', categoriesRouter);
+app.use('/dashboard/courses', coursesRouter);
 app.use('/course', courseRouter);
 app.use('/upload-photo', uploadPhotoRouter); 
 app.use('/check-user-type', checkUserTypeRouter); 

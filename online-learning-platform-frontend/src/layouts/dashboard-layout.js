@@ -8,15 +8,16 @@ export default function DashboardLayout() {
   const { userId, isLoaded } = useAuth()
   const navigate = useNavigate()
 
-  console.log('test', userId)
+  // console.log('test', userId)
 
   React.useEffect(() => {
     if (isLoaded && !userId) {
       navigate('/sign-in')
     }
-  }, [isLoaded])
+  }, [isLoaded, userId, navigate])
 
   if (!isLoaded) return 'Loading...'
-
+  
+    {/* Render child routes inside the dashboard layout */}
   return <Outlet />
 }

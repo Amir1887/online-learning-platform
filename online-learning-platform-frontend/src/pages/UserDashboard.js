@@ -1,9 +1,12 @@
 import React from 'react'
+import HomePage from './HomePage'
+import Footer from '../components/Footer'
 
 function UserDashboard() {
   return (
     <div>
-         <div>User-specific content here (view courses, enroll, etc.)</div>
+         <HomePage/>
+        
     </div>
   )
 }

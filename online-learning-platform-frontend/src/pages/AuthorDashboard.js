@@ -1,9 +1,10 @@
 import React from 'react'
+import HomePage from './HomePage'
 
 function AuthorDashboard() {
   return (
     <div>
-    Author-specific content here (manage courses, add lessons, etc.)
+      <HomePage/>
     </div>
   )
 }

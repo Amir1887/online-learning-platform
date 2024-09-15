@@ -40,7 +40,8 @@ const ProfilePage = () => {
       </div>
  
       <div>
-        <Link to="/update-profile">
+      {/* not forget forward slash so as not to append to current url */}
+        <Link to="/dashboard/update-profile"> 
           <button className="p-2 bg-blue-500 text-white rounded">Update Profile</button>
         </Link>
       </div>
