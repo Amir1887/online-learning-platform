@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
 import axios from 'axios';
 import UploadPhoto from './UploadPhoto';
+import useUserRole from '../useUserRole';
 
 const CoursePage = () => {
   const { id } = useParams();  // Get course ID from the URL
   const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isloading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const {userType, loading} = useUserRole();
+  
+
 
   useEffect(() => {
     // Fetch course details by ID
@@ -15,19 +20,20 @@ const CoursePage = () => {
       try {
         const res = await axios.get(`http://localhost:4000/course/${id}`);
         setCourse(res.data);
-        setLoading(false);
+        setIsLoading(false);
         // console.log("course details",course);
       } catch (err) {
         console.error('Error fetching course:', err);
         setError('Failed to load course details');
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchCourse();
   }, [id]);
 
-  if (loading) return <div>Loading course...</div>;
+  if (isloading) return <div>Loading course...</div>;
+  if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
@@ -86,34 +92,39 @@ const CoursePage = () => {
   )}
 </div>
 
+
+
 {/* USERS enrolled to this course */}
-<div className="my-8">
-  {course.enrolledUsers && course.enrolledUsers.length > 0 ? (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
-        Enrolled Users for this Course
-      </h1>
-    <div className="space-y-4 ml-7">
-  
-      {course.enrolledUsers.map((user, index) => (
-        <div
-          key={index}
-          className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400"
-        >
-          <h2 className="font-semibold text-xl text-blue-600">
-            Username: {user.name}
-          </h2>
-          <p className="text-gray-700">
-            <span className="font-medium text-gray-600">Email:</span> {user.email}
-          </p>
-        </div>
-      ))}
-    </div>
-    </div>
-  ) : (
-    <p className="text-gray-500">No enrolled users for this course!</p>
+      {/* Conditionally render based on role */}
+  {userType === "author" &&(
+    <div className="my-8">
+    {course.enrolledUsers && course.enrolledUsers.length > 0 ? (
+      <div>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
+          Enrolled Users for this Course
+        </h1>
+      <div className="space-y-4 ml-7">
+    
+        {course.enrolledUsers.map((user, index) => (
+          <div
+            key={index}
+            className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400"
+          >
+            <h2 className="font-semibold text-xl text-blue-600">
+              Username: {user.name}
+            </h2>
+            <p className="text-gray-700">
+              <span className="font-medium text-gray-600">Email:</span> {user.email}
+            </p>
+          </div>
+        ))}
+      </div>
+      </div>
+    ) : (
+      <p className="text-gray-500">No enrolled users for this course!</p>
+    )}
+  </div>
   )}
-</div>
 
 {/* ASSIGNMENT Section */}
 <div>
@@ -136,7 +147,9 @@ const CoursePage = () => {
 
 
 {/* Submissions Section */}
-<div className="my-8">
+    {/* Conditionally render based on role */}
+{userType === "author" && (
+  <div className="my-8">
   <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
     Submissions
   </h2>
@@ -166,6 +179,7 @@ const CoursePage = () => {
     <p className="text-gray-500 ml-7">No submissions available for this course.</p>
   )}
 </div>
+)}
 
 
 

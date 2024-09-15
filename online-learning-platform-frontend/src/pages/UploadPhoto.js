@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import useUserRole from '../useUserRole';
 
 function UploadPhoto() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [photoUrl, setPhotoUrl] = useState('');
   const [preview, setPreview] = useState('');
-
+  const {userType, loading} = useUserRole();
 
   // When file changes, generate a preview URL
   const onFileChange = (e) => {
@@ -46,23 +47,29 @@ function UploadPhoto() {
     setUploading(false);
   };
 
+  if (loading) return <div>Loading...</div>;
+
   return (
     <div className='mt-4 ml-5  flex flex-col  gap-3'>
-      {/* Custom styled input for file */}
-      <div className="mb-4">
-        <label htmlFor="file-upload" className="cursor-pointer inline-block p-3 text-white bg-blue-500 rounded-xl font-semibold hover:bg-blue-600">
-          Choose File
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          className="hidden"  // Hide the default file input
-          onChange={onFileChange}
-        />
-      </div>
+       {/* conditionally render all of these components  */} 
+
+         {/* Custom styled input for file */}
+      {userType === "author" && (
+                 <div className="mb-4">
+                 <label htmlFor="file-upload" className="cursor-pointer inline-block p-3 text-white bg-blue-500 rounded-xl font-semibold hover:bg-blue-600">
+                   Choose File
+                 </label>
+                 <input
+                   id="file-upload"
+                   type="file"
+                   className="hidden"  // Hide the default file input
+                   onChange={onFileChange}
+                 />
+               </div>
+      )}
 
       {/* Image preview before uploading */}
-      {preview && (
+      {userType === "author" && preview && (
         <div className='mb-4 ml-5'>
           <h3>Image Preview:</h3>
           <img src={preview} alt="Preview" style={{ width: '300px' }} />
@@ -70,10 +77,13 @@ function UploadPhoto() {
       )}
 
       {/* Upload button */}
-      <button className=' border font-semibold hover:border-blue-400 p-3 rounded-xl mb-4 max-w-xs' onClick={onUpload} disabled={uploading}>
-        {uploading ? 'Uploading...' : 'Upload Photo'}
-      </button>
+      {userType === "author" && (
+           <button className=' border font-semibold hover:border-blue-400 p-3 rounded-xl mb-4 max-w-xs' onClick={onUpload} disabled={uploading}>
+           {uploading ? 'Uploading...' : 'Upload Photo'}
+         </button>
+      )}
 
+       
       {/* Display uploaded photo */}
       {photoUrl && (
         <div className='ml-9'>
