@@ -8,7 +8,7 @@ const courseRouter = require('./routes/singleCourseRoutes');
 const uploadPhotoRouter = require('./routes/uploadPhotoRoute'); 
 const checkUserTypeRouter = require('./routes/authRoutes'); 
 const lessonRouter = require('./routes/singleLessonRoute'); 
-const enrollmentRouter = require('./routes/enrollmentRoute'); 
+
 
 
 
@@ -31,7 +31,7 @@ app.use('/course', courseRouter);
 app.use('/upload-photo', uploadPhotoRouter); 
 app.use('/check-user-type', checkUserTypeRouter); 
 app.use('/lesson', lessonRouter); 
-app.use('/enrollment', enrollmentRouter); 
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
