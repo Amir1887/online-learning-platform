@@ -19,6 +19,8 @@ import SignUpPage from './pages/SignUpPage';
 import InvoicesPage from './pages/InvoicesPage';
 import UpdateProfilePage from './pages/UpdateProfilePage';
 import UserRoleCheck from './UserRoleCheck';
+import SingleLessonPage from './pages/SingleLessonPage';
+import Enrollment from './pages/Enrollment';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +42,8 @@ const router = createBrowserRouter([
           { path: 'home', element: <HomePage /> },  // Accessible as /dashboard/home
           { path: 'courses', element: <CoursesPage /> },  // Accessible as /dashboard/courses
           { path: 'course/:id', element: <CoursePage /> },  // Accessible as /dashboard/course/:id
+          { path: 'course/:courseId/lesson/:lessonId', element: <SingleLessonPage /> },  // Accessible as /dashboard/course/:id/lessonId
+          { path: 'course/:id/enrollment', element: <Enrollment /> },  // Accessible as /dashboard/course/:id/enrollment
           { path: 'about', element: <AboutPage /> },  // Accessible as /dashboard/about
           { path: 'profile', element: <ProfilePage /> },  // Accessible as /dashboard/profile
           { path: 'update-profile', element: <UpdateProfilePage /> },  // Accessible as /dashboard/update-profile

@@ -204,6 +204,14 @@ const CoursePage = () => {
 </div>
 </div>
 
+
+  {/* enrollment Section */}
+  {userType === "user" && (
+      <Link to={`/dashboard/course/${course.id}/enrollment`} className='border border-gray-400  max-w-7xl w-full rounded-xl bg-blue-500 hover:bg-blue-600 hover:text-white cursor-pointer font-bold text-xl text-center p-3'>
+      <button>Enroll to this Course</button>
+    </Link>
+    
+  )}
     </div>
     </div>
   );
