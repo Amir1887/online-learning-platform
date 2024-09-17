@@ -39,14 +39,14 @@ function Enrollment() {
 
     return (
         <div>
-            {enrollingCondition &&  (
+            {enrollingCondition && (enrollingCondition.paymentstate === "complete") ? (
                 <>
                     <div>You are already enrolled in this course using: {enrollingCondition.paymentmethod}</div>
                     <div>Course ID: {course.id}</div>
                 </>
-            ) } 
+            ) :
             
-            {! enrollingCondition &&  (
+              (
                 <div>
                     You are not enrolled. Click below to enroll.
                     {/* Add your enrollment form or button here */}
