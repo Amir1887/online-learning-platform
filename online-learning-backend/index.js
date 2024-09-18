@@ -6,8 +6,10 @@ const categoriesRouter = require('./routes/categories');
 const coursesRouter = require('./routes/courses');
 const courseRouter = require('./routes/singleCourseRoutes');
 const uploadPhotoRouter = require('./routes/uploadPhotoRoute'); 
+const uploadFileRouter = require('./routes/uploadFilesRoute'); 
 const checkUserTypeRouter = require('./routes/authRoutes'); 
 const lessonRouter = require('./routes/singleLessonRoute'); 
+const path = require('path');
 
 
 
@@ -23,12 +25,16 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.static('uploads')); // Serve static files (uploaded images)
+// app.use(express.static('uploadedFiles')); 
+app.use('/uploadedFiles', express.static(path.join(__dirname, '../uploadedFiles')));// Serve static files (uploaded files)
+
 
 // Use route handlers
 app.use('/dashboard/categories', categoriesRouter);
 app.use('/dashboard/courses', coursesRouter);
 app.use('/course', courseRouter);
 app.use('/upload-photo', uploadPhotoRouter); 
+app.use('/', uploadFileRouter); 
 app.use('/check-user-type', checkUserTypeRouter); 
 app.use('/lesson', lessonRouter); 
 

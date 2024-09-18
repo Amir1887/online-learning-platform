@@ -1,8 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import VideoPlayer from './VideoPlayer';
+import FileDownload from './FileDownload';
+import UploadControls from './UploadControls';
+import useUserRole from '../useUserRole';
+
 
 function SingleLessonPage() {
+  const {userType, loading} = useUserRole();
   const { courseId, lessonId } = useParams();
   const [lesson, setLesson] = useState(null);
 
@@ -25,10 +31,24 @@ function SingleLessonPage() {
     return <div>Loading...</div>;
   }
 
+  if (loading) return <div>Loading...</div>;
+  
+
   return (
     <div>
       <h1>{lesson.title}</h1>
       <p>{lesson.content}</p>
+
+      {/* video component */}
+      <VideoPlayer videoUrl={lesson.videourl} videopath={lesson.videopath}/>
+
+      {/* attached files */}
+      <FileDownload  attachments={lesson.attachments}/>
+
+      {/* UploadControls component */}
+      {userType === "author" && (
+        <UploadControls  lessonId={lessonId} />
+      )}
     </div>
   );
 }
