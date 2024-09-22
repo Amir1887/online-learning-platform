@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import useUserRole from '../useUserRole';
 
-function UploadPhoto() {
+function UploadPhoto({id, course_image}) {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [photoUrl, setPhotoUrl] = useState('');
   const [preview, setPreview] = useState('');
   const {userType, loading} = useUserRole();
+
 
   // When file changes, generate a preview URL
   const onFileChange = (e) => {
@@ -31,13 +32,18 @@ function UploadPhoto() {
 
     setUploading(true);
     try {
-      const response = await axios.post('http://localhost:4000/upload-photo', formData, {
+      const response = await axios.post(`http://localhost:4000/upload-photo/${id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+      // console.log("here is the res after uploading",response);
+
+       // Accessing the correct path for the uploaded image
+         const imageUrl = response.data.updatedCourse.image;
+        
 
       // Prepend the server URL to the photo URL if needed
-       setPhotoUrl(`http://localhost:4000${response.data.filePath}`);
-      console.log("here is the photo url after uploading",response.data.filePath);
+       setPhotoUrl(`http://localhost:4000${imageUrl}`);
+      console.log("here is the photo url after uploading",`http://localhost:4000${imageUrl}`);
 
       alert('File uploaded successfully!');
     } catch (error) {
@@ -88,7 +94,7 @@ function UploadPhoto() {
       {photoUrl && (
         <div className='ml-9'>
           <h3>Uploaded Photo:</h3>
-          <img className='ml-3' src={photoUrl} alt="Uploaded" style={{ width: '300px' }} />
+          <img className='ml-3' src={course_image} alt="Uploaded" style={{ width: '300px' }} />
         </div>
       )}
     </div>

@@ -61,7 +61,7 @@ const CoursePage = () => {
 
     {/* image of the course will be here  */}
     <div>
-      <UploadPhoto/>
+      <UploadPhoto id={id} course_image={course.image}/>
     </div>
 
     <div className="max-w-3xl  p-6">

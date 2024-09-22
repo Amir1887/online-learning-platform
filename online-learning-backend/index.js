@@ -24,7 +24,8 @@ app.use(cors({
   origin: 'http://localhost:3000', 
   credentials: true,
 }));
-app.use(express.static('uploads')); // Serve static files (uploaded images)
+// app.use(express.static('uploads')); 
+app.use(express.static(path.join(__dirname, '../uploads'))); // Serve static files (uploaded images)
 // app.use(express.static('uploadedFiles')); 
 app.use('/uploadedFiles', express.static(path.join(__dirname, '../uploadedFiles')));// Serve static files (uploaded files)
 
@@ -33,7 +34,7 @@ app.use('/uploadedFiles', express.static(path.join(__dirname, '../uploadedFiles'
 app.use('/dashboard/categories', categoriesRouter);
 app.use('/dashboard/courses', coursesRouter);
 app.use('/course', courseRouter);
-app.use('/upload-photo', uploadPhotoRouter); 
+app.use('/', uploadPhotoRouter); 
 app.use('/', uploadFileRouter); 
 app.use('/check-user-type', checkUserTypeRouter); 
 app.use('/lesson', lessonRouter); 
