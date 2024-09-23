@@ -23,6 +23,7 @@ export const CourseProvider = ({ children }) => {
         try {
           const res = await axios.get(`http://localhost:4000/course/${id}`, { params: { userId } });
           setCourse(res.data);
+          setEnrollingCondition(res.data.enrollmentStatus);
           setIsLoading(false);
         } catch (err) {
           console.error(err); // This helps with debugging
