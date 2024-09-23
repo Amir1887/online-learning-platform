@@ -31,9 +31,9 @@ if (loading) return <div>Loading...</div>;
     <p className="text-gray-700 mb-6">{course.description}</p>
     </div>
 
-    
+     
           {/* Author Information */}
-        <Link to={"/dashboard/author-profile"}>
+        <Link to={`/dashboard/course/${id}/author-profile`}>
         <div className="flex items-center gap-6 p-4 border rounded-lg shadow-lg">
         <img
           src={course.author_image}  
@@ -59,21 +59,29 @@ if (loading) return <div>Loading...</div>;
 
 {/* Lessons Section */}
 <div className="my-8">
-  <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
-    Lessons
-  </h2>
+  <div className='flex justify-between items-center border-b pb-4 mb-4'>
+    <h2 className="text-2xl font-bold text-gray-800">
+      Lessons
+    </h2>
+    <Link to={`/dashboard/course/${course.id}/add-lesson`} className="text-blue-600 hover:underline">
+      Add New Lesson
+    </Link>
+  </div>
+
   {course.lessons && course.lessons.length > 0 ? (
     <div className="space-y-4 ml-7">
       {course.lessons.map((lesson, index) => (
         <Link
           to={`/dashboard/course/${course.id}/lesson/${lesson.lesson_id}`}
           key={lesson.lesson_id}
-          className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400"
+          className="block border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400"
         >
-          <h3 className="font-semibold text-xl text-blue-600">
-            Lesson {index + 1}: {lesson.title} 
-          </h3>
-          <p className="text-gray-600 mt-2">{lesson.content}</p>
+          <div>
+            <h3 className="font-semibold text-xl text-blue-600">
+              Lesson {index + 1}: {lesson.title}
+            </h3>
+            <p className="text-gray-600 mt-2">{lesson.content}</p>
+          </div>
         </Link>
       ))}
     </div>
@@ -81,6 +89,7 @@ if (loading) return <div>Loading...</div>;
     <p className="text-gray-500">No lessons available for this course.</p>
   )}
 </div>
+
 
 
 
@@ -118,7 +127,14 @@ if (loading) return <div>Loading...</div>;
 
 {/* ASSIGNMENT Section */}
 <div>
-  <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Assignments</h2>
+  <div className='flex justify-between items-center border-b pb-4 mb-4'>
+    <h2 className="text-2xl font-bold text-gray-800">
+    Assignments
+    </h2>
+    <Link to={`/dashboard/course/${course.id}/add-assignment`} className="text-blue-600 hover:underline">
+      Add New Assignment
+    </Link>
+  </div>
 <div className="my-8 ml-7">
   {course.assignments && course.assignments.length > 0 ? (
     <div className="space-y-4">
