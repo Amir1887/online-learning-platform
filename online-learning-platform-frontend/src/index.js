@@ -13,7 +13,7 @@ import ContactPage from './pages/ContactPage';
 import ProfilePage from './pages/ProfilePage';
 import AboutPage from './pages/AboutPage';
 import CoursesPage from './pages/CoursesPage';
-import CoursePage from './pages/CoursePage ';
+import CoursePage from './pages/CoursePage .js';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import InvoicesPage from './pages/InvoicesPage';
@@ -21,7 +21,15 @@ import UpdateProfilePage from './pages/UpdateProfilePage';
 import UserRoleCheck from './UserRoleCheck';
 import SingleLessonPage from './pages/SingleLessonPage';
 import Enrollment from './pages/Enrollment';
+import AuthorProfilePage from './pages/AuthorProfilePage';
 
+import NotFoundPage from './pages/NotFoundPage';
+import ErrorBoundary from './ErrorBoundary.js';
+import { CourseProvider } from './context/MyCourseContext.js';
+
+
+
+// NB: CourseSurrounderProvider only wraps routes where course/:id is involved. This reduces the risk of having id undefined in other non-course routes.
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
@@ -38,14 +46,43 @@ const router = createBrowserRouter([
         path: '/dashboard', // Dashboard prefix
         element: <DashboardLayout />,
         children: [
-          { path: '', element: <UserRoleCheck /> }, // Dashboard root
+
+          { path: '', 
+            element: (
+            <ErrorBoundary>
+              <UserRoleCheck />
+            </ErrorBoundary>
+          )}, // Dashboard root
+
           { path: 'home', element: <HomePage /> },  // Accessible as /dashboard/home
           { path: 'courses', element: <CoursesPage /> },  // Accessible as /dashboard/courses
-          { path: 'course/:id', element: <CoursePage /> },  // Accessible as /dashboard/course/:id
-          { path: 'course/:courseId/lesson/:lessonId', element: <SingleLessonPage /> },  // Accessible as /dashboard/course/:id/lessonId
-          { path: 'course/:id/enrollment', element: <Enrollment /> },  // Accessible as /dashboard/course/:id/enrollment
+
+          { path: 'course/:id',
+            element: (
+              <ErrorBoundary>
+                <CourseProvider>
+                <CoursePage />
+                </CourseProvider>
+              </ErrorBoundary>
+            )},  // Accessible as /dashboard/course/:id
+            
+
+          { path: 'course/:courseId/lesson/:lessonId', 
+            element: <SingleLessonPage />},  // Accessible as /dashboard/course/:id/lessonId
+
+
+          { path: 'course/:id/enrollment', 
+            element:(
+              <ErrorBoundary>
+                <CourseProvider>
+                <Enrollment />
+                </CourseProvider>
+              </ErrorBoundary>
+              )},  // Accessible as /dashboard/course/:id/enrollment
+
           { path: 'about', element: <AboutPage /> },  // Accessible as /dashboard/about
           { path: 'profile', element: <ProfilePage /> },  // Accessible as /dashboard/profile
+          { path: 'author-profile', element: <AuthorProfilePage /> },  // Accessible as /dashboard/author-profile
           { path: 'update-profile', element: <UpdateProfilePage /> },  // Accessible as /dashboard/update-profile
           { path: 'invoices', element: <InvoicesPage /> },  // Accessible as /dashboard/invoices
           { path: 'contact', element: <ContactPage /> },  // Accessible as /dashboard/contact

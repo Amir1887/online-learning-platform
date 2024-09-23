@@ -1,40 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useCourse } from '../context/MyCourseContext'; // Import the custom hook 
 import { Link, useParams } from 'react-router-dom';
 
-import axios from 'axios';
+
 import UploadPhoto from './UploadPhoto';
 import useUserRole from '../useUserRole';
+import { useAuth } from '@clerk/clerk-react';
+import axios from 'axios';
 
 const CoursePage = () => {
+  const { course,  isLoading,  error} = useCourse(); // Access the context 
   const { id } = useParams();  // Get course ID from the URL
-  const [course, setCourse] = useState(null);
-  const [isloading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const {userType, loading} = useUserRole();
-  
+ 
 
 
-  useEffect(() => {
-    // Fetch course details by ID
-    const fetchCourse = async () => {
-      try {
-        const res = await axios.get(`http://localhost:4000/course/${id}`);
-        setCourse(res.data);
-        setIsLoading(false);
-        // console.log("course details",course);
-      } catch (err) {
-        console.error('Error fetching course:', err);
-        setError('Failed to load course details');
-        setIsLoading(false);
-      }
-    };
 
-    fetchCourse();
-  }, [id]);
 
-  if (isloading) return <div>Loading course...</div>;
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+if (isLoading) return <div>Loading course...</div>;
+if (error) return <div>{error}</div>;
+if (!course) return <div>No course data available</div>;
+if (loading) return <div>Loading...</div>;
+
 
   return (
     <div>
@@ -46,6 +33,7 @@ const CoursePage = () => {
 
     
           {/* Author Information */}
+        <Link to={"/dashboard/author-profile"}>
         <div className="flex items-center gap-6 p-4 border rounded-lg shadow-lg">
         <img
           src={course.author_image}  
@@ -57,6 +45,7 @@ const CoursePage = () => {
           <p>Total Reviews: {course.author_totalreviews}</p>
         </div>
       </div>
+      </Link>
 
 
     {/* image of the course will be here  */}

@@ -1,40 +1,12 @@
-import { useAuth } from '@clerk/clerk-react';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
+
+import { useCourse } from '../context/MyCourseContext';
+
 
 function Enrollment() {
-    const [enrollingCondition, setEnrollingCondition] = useState(null);
-    const { id } = useParams();
-    const { userId } = useAuth(); // clreck userId
-    // to fetch user_id from singleCourseRoute to send it to enrollmentRoute...
-    const [course, setCourse] = useState(null);
-    const [isloading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { course, enrollingCondition, isLoading,  error,} = useCourse(); // Access the context 
 
-    // Fetch course details by ID
-    useEffect(() => {
-        if (id) {
-            const fetchCourse = async () => {
-                try {
-                    const res = await axios.get(`http://localhost:4000/course/${id}` ,{params: { userId }});
-                    setCourse(res.data); 
-                    setEnrollingCondition(res.data.enrollmentStatus)
-                    setIsLoading(false);      
-                    console.log("course details", res.data);
-                } catch (err) {
-                    console.error('Error fetching course:', err);
-                    setError('Failed to load course details');
-                    setIsLoading(false);
-                }
-            };
-            fetchCourse();
-        }
-    }, [id]);
-
-  
-
-    if (isloading) return <div>Loading... </div>;
+    if (isLoading) return <div>Loading... </div>;
     if (error) return <div>{error}</div>;
 
     return (
