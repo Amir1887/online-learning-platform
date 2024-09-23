@@ -26,6 +26,7 @@ import AuthorProfilePage from './pages/AuthorProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import ErrorBoundary from './ErrorBoundary.js';
 import { CourseProvider } from './context/MyCourseContext.js';
+import AddNewLesson from './pages/AddNewLesson.js';
 
 
 
@@ -69,7 +70,9 @@ const router = createBrowserRouter([
 
           { path: 'course/:courseId/lesson/:lessonId', 
             element: <SingleLessonPage />},  // Accessible as /dashboard/course/:id/lessonId
-
+       
+          { path: 'course/:id/add-lesson', 
+            element: <AddNewLesson />}, 
 
           { path: 'course/:id/enrollment', 
             element:(

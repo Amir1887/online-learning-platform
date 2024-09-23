@@ -63,7 +63,9 @@ if (loading) return <div>Loading...</div>;
     <h2 className="text-2xl font-bold text-gray-800">
       Lessons
     </h2>
-    <Link to={`/dashboard/course/${course.id}/add-lesson`} className="text-blue-600 hover:underline">
+
+
+    <Link to={`/dashboard/course/${id}/add-lesson`} className="text-blue-600 hover:underline">
       Add New Lesson
     </Link>
   </div>
