@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const UploadControls = ({ lessonId }) => {
+const UploadControls = ({ lessonId, videoUrl, videopath, attachments, attachmentpath}) => {
   const [videoFile, setVideoFile] = useState(null);
   const [files, setFiles] = useState([]);
 
@@ -36,15 +36,28 @@ const UploadControls = ({ lessonId }) => {
     }
   };
 
+  
+
+      // Check if there are videos and attached files
+  const VideoPresent = videoUrl || videopath;
+  const AttachmentsPresent = attachmentpath && attachments.length > 0;
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h3 className="text-2xl font-bold text-blue-600 mb-4">Upload Video and Files:</h3>
 
       {/* Video Upload */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="video-upload">
-          Upload Video:
-        </label>
+        {VideoPresent && AttachmentsPresent ? (
+               <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="video-upload">
+               Update Video:
+             </label>
+        ):(
+               <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="video-upload">
+               Upload Video:
+             </label>
+        )}
+   
         <input
           type="file"
           accept="video/mp4"
@@ -57,9 +70,16 @@ const UploadControls = ({ lessonId }) => {
       {/* File Upload */}
       {/* file: prefix applies styles specifically to file input elements. */}
       <div className="mb-6">
-        <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="file-upload">
-          Upload Files:
-        </label>
+        {VideoPresent && AttachmentsPresent ?(
+               <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="file-upload">
+               Update Files:
+             </label>
+        ):(
+               <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="file-upload">
+               Upload Files:
+             </label>
+        )}
+   
         <input
           type="file"
           multiple
@@ -69,12 +89,22 @@ const UploadControls = ({ lessonId }) => {
           />
       </div>
 
-      <button
-        onClick={handleSubmit}
-        className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-      >
-        Upload
-      </button>
+      {VideoPresent && AttachmentsPresent ? (
+              <button
+              onClick={handleSubmit}
+              className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Update
+            </button>
+      ): (
+              <button
+              onClick={handleSubmit}
+              className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Upload
+            </button>
+      )}
+
     </div>
   );
 };
