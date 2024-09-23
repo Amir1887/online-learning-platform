@@ -11,6 +11,7 @@ const CourseContext = createContext();
 export const CourseProvider = ({ children }) => {  
   const [course, setCourse] = useState(null);  
   const [enrollingCondition, setEnrollingCondition] = useState(null);
+  const [coursesBySingleAuthor, setCoursesBySingleAuthor] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
@@ -24,6 +25,7 @@ export const CourseProvider = ({ children }) => {
           const res = await axios.get(`http://localhost:4000/course/${id}`, { params: { userId } });
           setCourse(res.data);
           setEnrollingCondition(res.data.enrollmentStatus);
+          setCoursesBySingleAuthor(res.data.singleAuthorCourses);
           setIsLoading(false);
         } catch (err) {
           console.error(err); // This helps with debugging
@@ -40,7 +42,7 @@ export const CourseProvider = ({ children }) => {
     };
   }, [id, userId]);
   return (  
-    <CourseContext.Provider value={{ course, setCourse, enrollingCondition, setEnrollingCondition, isLoading, setIsLoading, error, setError}}>  
+    <CourseContext.Provider value={{ course, enrollingCondition, isLoading, error, coursesBySingleAuthor}}>  
       {children}  
     </CourseContext.Provider>  
   );  

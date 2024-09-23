@@ -82,7 +82,15 @@ const router = createBrowserRouter([
 
           { path: 'about', element: <AboutPage /> },  // Accessible as /dashboard/about
           { path: 'profile', element: <ProfilePage /> },  // Accessible as /dashboard/profile
-          { path: 'author-profile', element: <AuthorProfilePage /> },  // Accessible as /dashboard/author-profile
+
+         
+          { path: 'course/:id/author-profile', 
+            element: (
+            <CourseProvider>
+            <AuthorProfilePage />
+            </CourseProvider>
+          ) },  // Accessible as /dashboard/author-profile
+
           { path: 'update-profile', element: <UpdateProfilePage /> },  // Accessible as /dashboard/update-profile
           { path: 'invoices', element: <InvoicesPage /> },  // Accessible as /dashboard/invoices
           { path: 'contact', element: <ContactPage /> },  // Accessible as /dashboard/contact
