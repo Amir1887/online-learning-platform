@@ -6,9 +6,16 @@ function AddNewLesson() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [attachments, setAttachments] = useState([]);
-  const [attachmentLink, setAttachmentLink] = useState("");
+  const [attachmentLinks, setAttachmentLinks] = useState([]);
+  const [attachmentLinkInput, setAttachmentLinkInput] = useState(""); // Temporary state for input to allow adding multiple links
   const [video, setVideo] = useState(null);
   const [videoLink, setVideoLink] = useState("");
+
+  
+  function isValidURL(string) {
+    const urlPattern = new RegExp('^(https?://)', 'i');
+    return !!urlPattern.test(string); 
+  }
 
   // Handlers for form inputs
   function TitleHandler(e) {
@@ -23,8 +30,19 @@ function AddNewLesson() {
     setAttachments(Array.from(e.target.files));
   }
 
+  // Handler for adding attachment link (one at a time)
   function AttachmentLinkHandler(e) {
-    setAttachmentLink(e.target.value);
+    setAttachmentLinkInput(e.target.value);
+  }
+
+  function addAttachmentLink() {
+    const linkValue = attachmentLinkInput.trim(); //removes any leading or trailing whitespace
+    if (linkValue && isValidURL(linkValue)) {
+      setAttachmentLinks((prevLinks) => [...prevLinks, { url: linkValue }]);
+      setAttachmentLinkInput(""); // Clear the input after adding
+    } else {
+      alert("Please enter a valid URL.");
+    }
   }
 
   function VideoUploadHandler(e) {
@@ -35,30 +53,34 @@ function AddNewLesson() {
     setVideoLink(e.target.value);
   }
 
-  function isValidURL(string) {
-    const urlPattern = new RegExp('^(https?://)', 'i');
-    return !!urlPattern.test(string);
-}
-
   // Function to handle lesson upload
   async function AddLessonHandler(e) {
     e.preventDefault(); // Prevent page reload on form submission
 
-            // Validation
-            if (!title || !description || 
-                (attachmentLink && !isValidURL(attachmentLink)) || 
-                (videoLink && !isValidURL(videoLink))) {
-                alert("Please ensure all fields are filled correctly.");
-                return;
-            }
+    // Validation
+    if (
+      !title ||
+      !description ||
+      (attachmentLinks.length > 0 &&
+        attachmentLinks.some((link) => !isValidURL(link.url))) ||
+      (videoLink && !isValidURL(videoLink))
+    ) {
+      alert("Please ensure all fields are filled correctly.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
     attachments.forEach((attachment) => formData.append('attachments', attachment));
-    formData.append('attachmentLink', attachmentLink);
-    formData.append('video', video);
-    formData.append('videoLink', videoLink);
+    attachmentLinks.forEach((link) => formData.append('attachmentLinks', link.url));
+
+    if (video) {
+      formData.append('video', video);
+    }
+    if (videoLink) {
+      formData.append('videoLink', videoLink);
+    }
 
     try {
       const response = await fetch(`http://localhost:4000/course/${id}/upload-new-lesson/`, {
@@ -70,10 +92,17 @@ function AddNewLesson() {
       if (response.ok) {
         const data = await response.json();
         console.log('Success:', data);
+        setTitle("");
+        setDescription("");
+        setVideoLink("");
+        setAttachments([]);
+        setAttachmentLinks([]);
+        setVideo(null);
         alert("Lesson added successfully");
       } else {
-        console.error('Upload failed');
-        alert("Failed to add the lesson.");
+        const errorText = await response.text();
+        console.error('Upload failed:', errorText);
+        alert(`Failed to add the lesson: ${errorText}`);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -83,7 +112,9 @@ function AddNewLesson() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-blue-600 mb-6">Add New Lesson To Your Amazing Course</h1>
+      <h1 className="text-2xl font-bold text-blue-600 mb-6">
+        Add New Lesson To Your Amazing Course
+      </h1>
       <form className="p-4 flex flex-col max-w-xl mx-auto bg-white shadow-md rounded-lg" onSubmit={AddLessonHandler}>
         <input
           placeholder="Title Of New Lesson"
@@ -110,12 +141,21 @@ function AddNewLesson() {
         />
 
         <label className="mb-2">Add An Attachment via a link</label>
-        <input
-          placeholder="Attachment link"
-          value={attachmentLink}
-          onChange={AttachmentLinkHandler}
-          className="mb-4 p-2 border rounded"
-        />
+        <div className="flex">
+          <input
+            placeholder="Attachment link"
+            value={attachmentLinkInput} // Use the input state
+            onChange={AttachmentLinkHandler}
+            className="mb-4 p-2 border rounded flex-grow"
+          />
+          <button
+            type="button"
+            onClick={addAttachmentLink}
+            className="ml-2 p-2 bg-blue-600 text-white rounded-lg"
+          >
+            Add
+          </button>
+        </div>
 
         <label className="mb-2">Add A Video from your device</label>
         <input
