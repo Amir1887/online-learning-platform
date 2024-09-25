@@ -5,17 +5,14 @@ import { useParams } from 'react-router-dom';
 const AuthorAssignmentForm = () => {
   const { courseId, lessonId } = useParams();
 
-  // Initialize the questions with a selectedType field
   const [questions, setQuestions] = useState([
     { question: '', selectedType: '', mcqChoices: ['', '', ''], booleanChoices: ['True', 'False'], correctAnswer: '' }
   ]);
 
-  // Function to add a new empty question
   const addQuestion = () => {
     setQuestions([...questions, { question: '', selectedType: '', mcqChoices: ['', '', ''], booleanChoices: ['True', 'False'], correctAnswer: '' }]);
   };
 
-  // Function to handle question changes, including type and choices
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...questions];
 
@@ -46,15 +43,14 @@ const AuthorAssignmentForm = () => {
   };
 
   return (
-    <div>
-      <h2>Create Assignment</h2>
+    <div className="max-w-3xl mx-auto my-3 p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-bold text-blue-600 mb-6">Create Assignment</h2>
 
       {questions.map((q, index) => (
-        <div key={index} className="mb-4">
+        <div key={index} className="mb-6 p-4 bg-gray-50 rounded-lg shadow-inner">
 
-
-        {/* Dropdown to select the type of the question */}
-            <select
+         <select
+            className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
             value={q.selectedType}
             onChange={(e) => handleQuestionChange(index, 'selectedType', e.target.value)}
           >
@@ -64,24 +60,26 @@ const AuthorAssignmentForm = () => {
             <option value="Text">Text</option>
           </select>
 
-        {q.selectedType !=="" && (
-               <input
-               type="text"
-               placeholder="Question"
-               value={q.question}
-               onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
-             />
-        )}
+
+          {q.selectedType !== "" && (
+                    <input
+                    type="text"
+                    className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
+                    placeholder="Question"
+                    value={q.question}
+                    onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
+                  />
+          )}
 
 
 
-          {/* Conditional rendering based on the selected question type */}
           {q.selectedType === 'MCQs' && (
-            <div>
+            <div className="space-y-2">
               {q.mcqChoices.map((choice, i) => (
                 <input
                   key={i}
                   type="text"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder={`Choice ${i + 1}`}
                   value={choice}
                   onChange={(e) => handleQuestionChange(index, `mcqChoice${i}`, e.target.value)}
@@ -91,11 +89,12 @@ const AuthorAssignmentForm = () => {
           )}
 
           {q.selectedType === 'True & False' && (
-            <div>
+            <div className="space-y-2">
               {q.booleanChoices.map((choice, i) => (
                 <input
                   key={i}
                   type="text"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder={`Choice ${i + 1}`}
                   value={choice}
                   onChange={(e) => handleQuestionChange(index, `booleanChoice${i}`, e.target.value)}
@@ -108,6 +107,7 @@ const AuthorAssignmentForm = () => {
             <div>
               <input
                 type="text"
+                className="w-full p-2 border border-gray-300 rounded-lg"
                 placeholder="Write your answer"
                 value={q.correctAnswer}
                 onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
@@ -115,10 +115,10 @@ const AuthorAssignmentForm = () => {
             </div>
           )}
 
-           {/* Common correct answer input for MCQs and True/False */}
           {q.selectedType && (q.selectedType === 'MCQs' || q.selectedType === 'True & False') && (
             <input
               type="text"
+              className="w-full p-2 mt-4 border border-gray-300 rounded-lg"
               placeholder="Correct Answer"
               value={q.correctAnswer}
               onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
@@ -127,12 +127,22 @@ const AuthorAssignmentForm = () => {
         </div>
       ))}
 
-      <button onClick={addQuestion}>Add Question</button>
-      <button onClick={handleSubmit}>Submit Assignment</button>
+      <div className="flex justify-between mt-4">
+        <button
+          onClick={addQuestion}
+          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600"
+        >
+          Add Question
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600"
+        >
+          Submit Assignment
+        </button>
+      </div>
     </div>
   );
 };
 
 export default AuthorAssignmentForm;
-
-
