@@ -51,15 +51,10 @@ const AuthorAssignmentForm = () => {
 
       {questions.map((q, index) => (
         <div key={index} className="mb-4">
-          <input
-            type="text"
-            placeholder="Question"
-            value={q.question}
-            onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
-          />
 
-          {/* Dropdown to select the type of the question */}
-          <select
+
+        {/* Dropdown to select the type of the question */}
+            <select
             value={q.selectedType}
             onChange={(e) => handleQuestionChange(index, 'selectedType', e.target.value)}
           >
@@ -68,6 +63,17 @@ const AuthorAssignmentForm = () => {
             <option value="True & False">True & False</option>
             <option value="Text">Text</option>
           </select>
+
+        {q.selectedType !=="" && (
+               <input
+               type="text"
+               placeholder="Question"
+               value={q.question}
+               onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
+             />
+        )}
+
+
 
           {/* Conditional rendering based on the selected question type */}
           {q.selectedType === 'MCQs' && (
@@ -109,8 +115,8 @@ const AuthorAssignmentForm = () => {
             </div>
           )}
 
-          {/* Common correct answer input for all types */}
-          {q.selectedType && (
+           {/* Common correct answer input for MCQs and True/False */}
+          {q.selectedType && (q.selectedType === 'MCQs' || q.selectedType === 'True & False') && (
             <input
               type="text"
               placeholder="Correct Answer"
@@ -128,3 +134,5 @@ const AuthorAssignmentForm = () => {
 };
 
 export default AuthorAssignmentForm;
+
+
