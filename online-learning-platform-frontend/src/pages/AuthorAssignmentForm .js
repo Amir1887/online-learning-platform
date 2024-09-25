@@ -39,7 +39,13 @@ const AuthorAssignmentForm = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/create-assignment`, { title: assignmentTitle,  questions });
-      console.log(response.data);
+        if(response.status === 201 || response.statusText ==="Created"){
+          setAssignmentTitle("");
+          setQuestions([
+            { question: '', selectedType: '', mcqChoices: ['', '', ''], booleanChoices: ['True', 'False'], correctAnswer: '' }
+          ]);
+        }
+        console.log(response.data);
     } catch (error) {
       console.error('Error creating assignment', error);
     }
@@ -121,7 +127,7 @@ const AuthorAssignmentForm = () => {
               <input
                 type="text"
                 className="w-full p-2 border border-gray-300 rounded-lg"
-                placeholder="Write your answer"
+                placeholder="Write Correct Answer"
                 value={q.correctAnswer}
                 onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
               />
