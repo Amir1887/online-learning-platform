@@ -3,36 +3,36 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 const AuthorAssignmentForm = () => {
-    const {courseId, lessonId} = useParams();
+  const { courseId, lessonId } = useParams();
 
-// Initializes state with an array containing one question object. Each question has:
-    // An empty question string.
-    // An array of choices (4 empty strings).
-    // An empty correctAnswer string.
+  // Initialize the questions with a selectedType field
   const [questions, setQuestions] = useState([
-    { question: '', choices: ['', '', '', ''], correctAnswer: '' }
+    { question: '', selectedType: '', mcqChoices: ['', '', ''], booleanChoices: ['True', 'False'], correctAnswer: '' }
   ]);
 
-  //adds a new empty question object to the questions state (adding new qs to assignment)
+  // Function to add a new empty question
   const addQuestion = () => {
-    setQuestions([...questions, { question: '', choices: ['', '', '', ''], correctAnswer: '' }]);
+    setQuestions([...questions, { question: '', selectedType: '', mcqChoices: ['', '', ''], booleanChoices: ['True', 'False'], correctAnswer: '' }]);
   };
 
-
-  //This function updates the state based on user input:
-          //1.It takes an index of the question, the field being updated, and the new value.
-          //2.Creates a copy of the current questions state.
-          //3.Updates the specific property (question text, choice, or correct answer) of the selected question.
+  // Function to handle question changes, including type and choices
   const handleQuestionChange = (index, field, value) => {
-    const updatedQuestions = [...questions]; //Creates a copy
+    const updatedQuestions = [...questions];
+
     if (field === 'question') {
       updatedQuestions[index].question = value;
-    } else if (field.startsWith('choice')) {
-      const choiceIndex = parseInt(field.split('choice')[1]);
-      updatedQuestions[index].choices[choiceIndex] = value; // index > index of qs but choiceIndex is index of choice 
+    } else if (field === 'selectedType') {
+      updatedQuestions[index].selectedType = value;
+    } else if (field.startsWith('mcqChoice')) {
+      const choiceIndex = parseInt(field.split('mcqChoice')[1]);
+      updatedQuestions[index].mcqChoices[choiceIndex] = value;
+    } else if (field.startsWith('booleanChoice')) {
+      const choiceIndex = parseInt(field.split('booleanChoice')[1]);
+      updatedQuestions[index].booleanChoices[choiceIndex] = value;
     } else if (field === 'correctAnswer') {
       updatedQuestions[index].correctAnswer = value;
     }
+
     setQuestions(updatedQuestions);
   };
 
@@ -48,6 +48,7 @@ const AuthorAssignmentForm = () => {
   return (
     <div>
       <h2>Create Assignment</h2>
+
       {questions.map((q, index) => (
         <div key={index} className="mb-4">
           <input
@@ -56,23 +57,70 @@ const AuthorAssignmentForm = () => {
             value={q.question}
             onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
           />
-          {q.choices.map((choice, i) => (
+
+          {/* Dropdown to select the type of the question */}
+          <select
+            value={q.selectedType}
+            onChange={(e) => handleQuestionChange(index, 'selectedType', e.target.value)}
+          >
+            <option value="">Select Type</option>
+            <option value="MCQs">MCQs</option>
+            <option value="True & False">True & False</option>
+            <option value="Text">Text</option>
+          </select>
+
+          {/* Conditional rendering based on the selected question type */}
+          {q.selectedType === 'MCQs' && (
+            <div>
+              {q.mcqChoices.map((choice, i) => (
+                <input
+                  key={i}
+                  type="text"
+                  placeholder={`Choice ${i + 1}`}
+                  value={choice}
+                  onChange={(e) => handleQuestionChange(index, `mcqChoice${i}`, e.target.value)}
+                />
+              ))}
+            </div>
+          )}
+
+          {q.selectedType === 'True & False' && (
+            <div>
+              {q.booleanChoices.map((choice, i) => (
+                <input
+                  key={i}
+                  type="text"
+                  placeholder={`Choice ${i + 1}`}
+                  value={choice}
+                  onChange={(e) => handleQuestionChange(index, `booleanChoice${i}`, e.target.value)}
+                />
+              ))}
+            </div>
+          )}
+
+          {q.selectedType === 'Text' && (
+            <div>
+              <input
+                type="text"
+                placeholder="Write your answer"
+                value={q.correctAnswer}
+                onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+              />
+            </div>
+          )}
+
+          {/* Common correct answer input for all types */}
+          {q.selectedType && (
             <input
-              key={i}
               type="text"
-              placeholder={`Choice ${i + 1}`}
-              value={choice}
-              onChange={(e) => handleQuestionChange(index, `choice${i}`, e.target.value)}
+              placeholder="Correct Answer"
+              value={q.correctAnswer}
+              onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
             />
-          ))}
-          <input
-            type="text"
-            placeholder="Correct Answer"
-            value={q.correctAnswer}
-            onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
-          />
+          )}
         </div>
       ))}
+
       <button onClick={addQuestion}>Add Question</button>
       <button onClick={handleSubmit}>Submit Assignment</button>
     </div>
