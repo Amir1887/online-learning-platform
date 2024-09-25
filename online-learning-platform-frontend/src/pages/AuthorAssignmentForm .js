@@ -5,6 +5,9 @@ import { useParams } from 'react-router-dom';
 const AuthorAssignmentForm = () => {
   const { courseId, lessonId } = useParams();
 
+    // State for assignment title  
+    const [assignmentTitle, setAssignmentTitle] = useState('');
+
   const [questions, setQuestions] = useState([
     { question: '', selectedType: '', mcqChoices: ['', '', ''], booleanChoices: ['True', 'False'], correctAnswer: '' }
   ]);
@@ -35,7 +38,7 @@ const AuthorAssignmentForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/create-assignment`, { questions });
+      const response = await axios.post(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/create-assignment`, { title: assignmentTitle,  questions });
       console.log(response.data);
     } catch (error) {
       console.error('Error creating assignment', error);
@@ -45,6 +48,16 @@ const AuthorAssignmentForm = () => {
   return (
     <div className="max-w-3xl mx-auto my-3 p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold text-blue-600 mb-6">Create Assignment</h2>
+
+      <h3 className="mb-2 font-semibold">Assignment Title: {assignmentTitle}</h3>  
+      {/* Input for assignment title */}  
+       <input  
+        type="text"  
+        className="w-full p-2 mb-4 border border-gray-300 rounded-lg"  
+        placeholder="Assignment Title"  
+        value={assignmentTitle}  
+        onChange={(e) => setAssignmentTitle(e.target.value)}  
+      />  
 
       {questions.map((q, index) => (
         <div key={index} className="mb-6 p-4 bg-gray-50 rounded-lg shadow-inner">
