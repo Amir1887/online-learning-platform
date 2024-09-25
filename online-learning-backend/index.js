@@ -7,8 +7,10 @@ const coursesRouter = require('./routes/courses');
 const courseRouter = require('./routes/singleCourseRoutes');
 const uploadPhotoRouter = require('./routes/uploadPhotoRoute'); 
 const uploadFileRouter = require('./routes/uploadFilesRoute'); 
+const uploadNewLessonRoute = require('./routes/uploadNewLessonRoute'); 
 const checkUserTypeRouter = require('./routes/authRoutes'); 
 const lessonRouter = require('./routes/singleLessonRoute'); 
+const assignmentRouter = require('./routes/assignmentRoute'); 
 const path = require('path');
 
 
@@ -28,6 +30,7 @@ app.use(cors({
 app.use(express.static(path.join(__dirname, '../uploads'))); // Serve static files (uploaded images)
 // app.use(express.static('uploadedFiles')); 
 app.use('/uploadedFiles', express.static(path.join(__dirname, '../uploadedFiles')));// Serve static files (uploaded files)
+app.use('/uploadedLessons', express.static(path.join(__dirname, '../uploadedLessons')));
 
 
 // Use route handlers
@@ -36,8 +39,10 @@ app.use('/dashboard/courses', coursesRouter);
 app.use('/course', courseRouter);
 app.use('/', uploadPhotoRouter); 
 app.use('/', uploadFileRouter); 
+app.use('/', uploadNewLessonRoute); 
 app.use('/check-user-type', checkUserTypeRouter); 
 app.use('/lesson', lessonRouter); 
+app.use('/', assignmentRouter); 
 
 
 app.listen(port, () => {
