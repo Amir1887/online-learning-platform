@@ -27,6 +27,9 @@ import NotFoundPage from './pages/NotFoundPage';
 import ErrorBoundary from './ErrorBoundary.js';
 import { CourseProvider } from './context/MyCourseContext.js';
 import AddNewLesson from './pages/AddNewLesson.js';
+import AllLessonsPage from './pages/AllLessonsPage.js';
+import AuthorAssignmentForm from './pages/AuthorAssignmentForm .js';
+import AssingmentToUserSide from './pages/AssingmentToUserSide.js';
 
 
 
@@ -66,11 +69,29 @@ const router = createBrowserRouter([
                 </CourseProvider>
               </ErrorBoundary>
             )},  // Accessible as /dashboard/course/:id
-            
+
+              
+           { path: 'course/:id/all-lessons', 
+            element: (
+              <ErrorBoundary>
+                <CourseProvider>
+                <AllLessonsPage />
+                </CourseProvider>
+              </ErrorBoundary>
+            ) },    //dashboard/course/19/all-lessons
 
           { path: 'course/:courseId/lesson/:lessonId', 
             element: <SingleLessonPage />},  // Accessible as /dashboard/course/:id/lessonId
-       
+
+      
+
+          { path: 'course/:courseId/lesson/:lessonId/new-assingment', 
+            element: <AuthorAssignmentForm />}, 
+
+          
+          { path: 'course/:courseId/lesson/:lessonId/assignments-to-lesson', 
+            element: <AssingmentToUserSide />}, 
+
           { path: 'course/:id/add-lesson', 
             element: <AddNewLesson />}, 
 
