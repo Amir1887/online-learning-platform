@@ -10,21 +10,33 @@ function AssignmentToUserSide() {
 
   useEffect(() => {
     async function fetchAssignments() {
-      const result = await axios.get(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/assignments-to-lesson`);
-      console.log("Assignment Response:", result);
-      setTitle(result.data.title);
-      setCreatedAt(result.data.createdAt);
-      setQuestions(result.data.assignments.questions);
+        try {
+            const result = await axios.get(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/assignments-to-lesson`);
+            console.log("Assignment Response:", result);
+              if(result.status === 200 || result.statusText === "OK" ){
+                  setTitle(result.data.title);
+                  setCreatedAt(result.data.createdAt);
+                  setQuestions(result.data.assignments.questions);
+              }else{
+                  // Handle cases where the response is not OK
+                  setQuestions([]); // Clear questions if not OK
+                  setTitle("This Lesson Has No Assignments");
+              }
+        } catch (error) {
+            console.error("Error fetching assignments:", error);
+            setQuestions([]); // Clear questions if an error occurs
+            setTitle("Error fetching assignments."); // Set an error message
+        }
     }
     fetchAssignments();
   }, [courseId, lessonId]);
 
   return (
     <div>
-      <h1>Assignment: {title}</h1>
-      <p>Created At: {new Date(createdAt).toString()}</p>
+          <h1>Assignment: {title || "No Assignments Available"}</h1>
+          <p>Created At: {createdAt ? new Date(createdAt).toString() : "No date available"}</p>
 
-      {questions && questions.length > 0 && (
+      {questions && questions.length > 0 ? (
         questions.map((q, index) => (
           <div key={index} className="mb-4 p-4 border border-gray-300 rounded-lg">
             <p><strong>Type of question:</strong> {q.selectedType}</p>
@@ -55,6 +67,8 @@ function AssignmentToUserSide() {
             )}
           </div>
         ))
+      ):(
+        <p>This Lesson Has No Assignments</p>
       )}
     </div>
   );
