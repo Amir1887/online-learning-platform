@@ -5,8 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import UploadPhoto from './UploadPhoto';
 import useUserRole from '../useUserRole';
-import { useAuth } from '@clerk/clerk-react';
-import axios from 'axios';
+
 
 const CoursePage = () => {
   const { course,  isLoading,  error} = useCourse(); // Access the context 
@@ -133,7 +132,7 @@ if (loading) return <div>Loading...</div>;
     <h2 className="text-2xl font-bold text-gray-800">
     Assignments
     </h2>
-    <Link to={`/dashboard/course/${course.id}/add-assignment`} className="text-blue-600 hover:underline">
+    <Link to={`/dashboard/course/${course.id}/all-lessons`} className="text-blue-600 hover:underline">
       Add New Assignment
     </Link>
   </div>
