@@ -4,27 +4,44 @@ import { useAssignment } from '../context/AssignmentContext';
 
 function AssignmentToUserSide() {  
   const { courseId, lessonId } = useParams(); 
-  const {assignments, title, createdAt, isLoading, error} = useAssignment();
+  const { assignments, title, createdAt, isLoading, error } = useAssignment();
 
-    // If loading or error
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+  // If loading or error
+  if (isLoading) return <p className="text-center text-blue-500">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
+
   return (  
-    <div>  
-      <h1>Assignments: {title || "No Assignments Available"}</h1>  
-      <p>Created At: {createdAt ? new Date(createdAt).toString() : "No date available"}</p>  
+    <div className="p-6 bg-white shadow-md rounded-lg">  
+      {/* Title Section */}
+      <h1 className="text-2xl font-bold text-blue-600 mb-4">
+        {title ? `Assignments: ${title}` : "No Assignments Available"}
+      </h1>
 
-      {assignments.length > 0 ? (  
-        assignments.map((assignment, index) => (  
-          <Link to={`/dashboard/course/${courseId}/lesson/${lessonId}/assignments-to-lesson/${index}`} key={index} className="mb-4 p-4 border border-gray-300 rounded-lg">  
-            <h2>Assignment Title: {assignment.title}</h2>  
-          </Link>  
-        ))  
-      ) : (  
-        <p>This Lesson Has No Assignments</p>  
-      )}  
+      {/* Created At */}
+      <p className="text-sm text-gray-600 mb-4">
+        Created At: {createdAt ? new Date(createdAt).toLocaleString() : "No date available"}
+      </p>
+
+      {/* Assignments List */}
+      {assignments.length > 0 ? (
+        <div className="space-y-4">
+          {assignments.map((assignment, index) => (
+            <Link
+              to={`/dashboard/course/${courseId}/lesson/${lessonId}/assignments-to-lesson/${index}`}
+              key={index}
+              className="block p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            >
+              <h2 className="text-lg font-semibold text-gray-800">
+                Assignment Title: {assignment.title}
+              </h2>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-500">This Lesson Has No Assignments</p>
+      )}
     </div>  
   );  
-}  
+}
 
 export default AssignmentToUserSide;
