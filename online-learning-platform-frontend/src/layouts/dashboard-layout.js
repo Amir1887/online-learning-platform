@@ -5,19 +5,17 @@ import { Outlet, useNavigate } from 'react-router-dom'
 
 //This component is designed for authenticated users
 export default function DashboardLayout() {
-  const { userId, isLoaded } = useAuth()
-  const navigate = useNavigate()
-
-  // console.log('test', userId)
+  const { userId, isLoaded } = useAuth();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (isLoaded && !userId) {
-      navigate('/sign-in')
+      navigate('/sign-in');
     }
-  }, [isLoaded, userId, navigate])
+  }, [isLoaded, userId, navigate]);
 
-  if (!isLoaded) return 'Loading...'
-  
-    {/* Render child routes inside the dashboard layout */}
-  return <Outlet />
+  if (!isLoaded) return <div>Loading...</div>;
+  if (!userId) return <div>Please sign in...</div>;
+
+  return <Outlet />;  // Proper JSX here
 }

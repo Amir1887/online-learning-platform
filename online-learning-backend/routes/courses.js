@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
     const params = [];
 
     if (categoryId) {
-      query += ' WHERE "categoryId" = $1';
+      query += ' WHERE "categoryId" = $1'; // filtering 
       params.push(categoryId);
     }
 

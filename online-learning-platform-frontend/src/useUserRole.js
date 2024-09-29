@@ -10,24 +10,27 @@ export default function useUserRole() {
   const [loading, setLoading] = useState(true); 
 
 //Make sure that user is available and correctly populated before making the API call
-  useEffect(() => {
-    if (user) {
-      const checkUserType = async () => {
-        try {
-          const response = await axios.post('http://localhost:4000/check-user-type', {
-            email: user.emailAddresses[0].emailAddress,
-          });
-          setUserType(response.data.type);
-        } catch (error) {
-          console.error('Error checking user type:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      
-      checkUserType();
-    }
-  }, [user]);
+useEffect(() => {
+  if (user && user.emailAddresses && user.emailAddresses.length > 0) {
+    const checkUserType = async () => {
+      try {
+        const response = await axios.post('http://localhost:4000/check-user-type', {
+          email: user.emailAddresses[0].emailAddress,
+        });
+        setUserType(response.data.type);
+      } catch (error) {
+        console.error('Error checking user type:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    checkUserType();
+  } else {
+    setLoading(false); // Don't keep loading forever if user data isn't available
+  }
+}, [user]);
+
 
  // they become reusable througth diff pages and components...
 return {userType, loading};

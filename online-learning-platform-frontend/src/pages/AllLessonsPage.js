@@ -1,10 +1,10 @@
 import React from 'react'
 import { useCourse } from '../context/MyCourseContext';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function AllLessonsPage() {
-    const { course,  isLoading,  error} = useCourse();
-    const { id } = useParams(); 
+   const { course,  isLoading,  error} = useCourse();
+  
 if (isLoading) return <div>Loading course...</div>;
 if (error) return <div>{error}</div>;
 if (!course) return <div>No course data available</div>;

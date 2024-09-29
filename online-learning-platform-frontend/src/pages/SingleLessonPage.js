@@ -1,33 +1,24 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
 import FileDownload from './FileDownload';
 import UploadControls from './UploadControls';
 import useUserRole from '../useUserRole';
+import { useLesson } from '../context/LessonContext';
 
 function SingleLessonPage() {
   const { userType, loading } = useUserRole();
   const { courseId, lessonId } = useParams();
-  const [lesson, setLesson] = useState(null);
+  const{ lesson,  isLoading, error} = useLesson();
 
-  useEffect(() => {
-    async function fetchLesson() {
-      try {
-        const res = await axios.get(`http://localhost:4000/lesson/${lessonId}`);
-        if (res.data) {
-          setLesson(res.data);
-          console.log("Lesson response", res);
-        }
-      } catch (error) {
-        console.error("Error fetching lesson:", error);
-      }
-    }
-    fetchLesson();
-  }, [lessonId]);
 
-  if (!lesson || loading) {
+  if (isLoading|| loading) {
     return <div className='flex justify-center items-center h-screen text-lg text-gray-700'>Loading...</div>;
+  }
+
+  if(error){
+    return <div className='flex justify-center items-center h-screen text-lg text-gray-700'>error:{error}</div>;
   }
 
   return (
@@ -52,10 +43,16 @@ function SingleLessonPage() {
         <FileDownload attachments={lesson.attachments} attachmentpath={lesson.attachmentpath} />
       </div>
 
+    
+      {/* Assignments for this lesson */}
+      <Link to={`/dashboard/course/${courseId}/lesson/${lessonId}/assignments-to-lesson`}>
+      Assignments for this lesson
+      </Link>
+
       {/* Upload Controls Component */}
       {userType === "author" && (
         <div className='mt-8'>
-          <UploadControls lessonId={lessonId} />
+          <UploadControls lessonId={lessonId} videoUrl={lesson.videourl} videopath={lesson.videopath} attachments={lesson.attachments} attachmentpath={lesson.attachmentpath}/>
         </div>
       )}
     </div>

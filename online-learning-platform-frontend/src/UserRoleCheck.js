@@ -3,12 +3,15 @@ import AuthorDashboard from "./pages/AuthorDashboard";
 import useUserRole from "./useUserRole";
 
 export default function UserRoleCheck() {
- const {userType, loading} = useUserRole();
+  const { userType, loading } = useUserRole();
 
   if (loading) return <div>Loading...</div>;
-  return (
-    <div>
-      {userType === 'user' ? <UserDashboard /> : <AuthorDashboard />}
-    </div>
-  );
+
+  if (userType === 'user') {
+    return <UserDashboard />;
+  } else if (userType === 'author') {
+    return <AuthorDashboard />;
+  } else {
+    return <div>Error: Unknown user type.</div>; // Default error handling
+  }
 }

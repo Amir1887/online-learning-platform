@@ -46,7 +46,7 @@ router.post('/lesson/upload-file/:id', upload.fields([{ name: 'video' }, { name:
       const videoPath = files.video ? `/uploadedFiles/${files.video[0].filename}` : null;
       const attachmentPaths = files.attachments ? files.attachments.map(file => `/uploadedFiles/${file.filename}`) : null;
   
-      // Debugging: >>>>>>>>>>>>>>
+      // Debugging::::::::::::::::::::::
 
       // Check if lesson exists
       const lesson = await prisma.lesson.findUnique({
@@ -56,7 +56,7 @@ router.post('/lesson/upload-file/:id', upload.fields([{ name: 'video' }, { name:
       console.log("single lesson table: ",lesson);
       // const lesson = await prisma.lesson.findMany();
       // const lesson = await prisma.$queryRaw`SELECT * FROM "Lesson"`;
-
+      //console.log("lesson table: ",lesson);
 
 
       

@@ -11,7 +11,6 @@ const pool = new Pool({
   port: 5432,
 });
 
-// (`http://localhost:4000/course/${courseId}/lesson/${lessonId}/create-assignment`
 router.post('/course/:courseId/lesson/:lessonId/create-assignment', async (req, res) => {
     const { courseId, lessonId } = req.params;
     const { title,questions } = req.body;

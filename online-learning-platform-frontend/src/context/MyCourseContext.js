@@ -10,6 +10,7 @@ const CourseContext = createContext();
 // Create a provider component  
 export const CourseProvider = ({ children }) => {  
   const [course, setCourse] = useState(null);  
+  const [allLessons, setAllLessons] = useState(null);  
   const [enrollingCondition, setEnrollingCondition] = useState(null);
   const [coursesBySingleAuthor, setCoursesBySingleAuthor] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +25,8 @@ export const CourseProvider = ({ children }) => {
         try {
           const res = await axios.get(`http://localhost:4000/course/${id}`, { params: { userId } });
           setCourse(res.data);
+          setAllLessons(res.data.lessons);
+          console.log('Fetched lessons data:', res.data.lessons);  // Debugging: check the course data here
           setEnrollingCondition(res.data.enrollmentStatus);
           setCoursesBySingleAuthor(res.data.singleAuthorCourses);
           setIsLoading(false);
@@ -42,7 +45,7 @@ export const CourseProvider = ({ children }) => {
     };
   }, [id, userId]);
   return (  
-    <CourseContext.Provider value={{ course, enrollingCondition, isLoading, error, coursesBySingleAuthor}}>  
+    <CourseContext.Provider value={{ course, allLessons, enrollingCondition, isLoading, error, coursesBySingleAuthor}}>  
       {children}  
     </CourseContext.Provider>  
   );  

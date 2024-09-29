@@ -30,6 +30,9 @@ import AddNewLesson from './pages/AddNewLesson.js';
 import AllLessonsPage from './pages/AllLessonsPage.js';
 import AuthorAssignmentForm from './pages/AuthorAssignmentForm .js';
 import AssingmentToUserSide from './pages/AssingmentToUserSide.js';
+import SingleAssignmentPage from './pages/SingleAssignmentPage.js';
+import { AssignmentProvider } from './context/AssignmentContext.js';
+import { LessonProvider } from './context/LessonContext.js';
 
 
 
@@ -81,16 +84,33 @@ const router = createBrowserRouter([
             ) },    //dashboard/course/19/all-lessons
 
           { path: 'course/:courseId/lesson/:lessonId', 
-            element: <SingleLessonPage />},  // Accessible as /dashboard/course/:id/lessonId
+            element: (
+            <LessonProvider>
+            <SingleLessonPage />
+            </LessonProvider>
+          )},  // Accessible as /dashboard/course/:id/lessonId
 
       
 
           { path: 'course/:courseId/lesson/:lessonId/new-assingment', 
             element: <AuthorAssignmentForm />}, 
 
-          
+       
           { path: 'course/:courseId/lesson/:lessonId/assignments-to-lesson', 
-            element: <AssingmentToUserSide />}, 
+            element: (
+             <AssignmentProvider>
+              <LessonProvider>
+               <AssingmentToUserSide />
+               </LessonProvider>
+            </AssignmentProvider>
+          )}, 
+
+          { path: 'course/:courseId/lesson/:lessonId/assignments-to-lesson/:index', 
+              element: (
+              <AssignmentProvider>
+              <SingleAssignmentPage />
+              </AssignmentProvider>
+            )}, 
 
           { path: 'course/:id/add-lesson', 
             element: <AddNewLesson />}, 
