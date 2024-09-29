@@ -30,6 +30,8 @@ import AddNewLesson from './pages/AddNewLesson.js';
 import AllLessonsPage from './pages/AllLessonsPage.js';
 import AuthorAssignmentForm from './pages/AuthorAssignmentForm .js';
 import AssingmentToUserSide from './pages/AssingmentToUserSide.js';
+import SingleAssignmentPage from './pages/SingleAssignmentPage.js';
+import { AssignmentProvider } from './context/AssignmentContext.js';
 
 
 
@@ -90,7 +92,18 @@ const router = createBrowserRouter([
 
           
           { path: 'course/:courseId/lesson/:lessonId/assignments-to-lesson', 
-            element: <AssingmentToUserSide />}, 
+            element: (
+             <AssignmentProvider>
+               <AssingmentToUserSide />
+            </AssignmentProvider>
+          )}, 
+
+          { path: 'course/:courseId/lesson/:lessonId/assignments-to-lesson/:index', 
+              element: (
+              <AssignmentProvider>
+              <SingleAssignmentPage />
+              </AssignmentProvider>
+            )}, 
 
           { path: 'course/:id/add-lesson', 
             element: <AddNewLesson />}, 
