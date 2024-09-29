@@ -28,9 +28,8 @@ router.get('/course/:courseId/lesson/:lessonId/assignments-to-lesson', async (re
                 return res.status(404).json({ error: 'No Assignments for this Lesson' });
              }
     
-             const assignmentData = assignmentResult.rows[0];
-          
-             res.json(assignmentData);
+              // Return all assignments  
+        res.json(assignmentResult.rows); // Just return rows here  
     } catch (error) {
         console.error('Error fetching course:', error);
         res.status(500).json({ error: 'Internal Server Error' });
