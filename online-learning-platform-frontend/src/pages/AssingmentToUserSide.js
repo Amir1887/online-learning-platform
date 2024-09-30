@@ -25,7 +25,7 @@ function AssignmentToUserSide() {
       {assignments.length > 0 ? (  
         assignments.map((assignment, index) => (  
           <Link 
-            to={`/dashboard/course/${courseId}/lesson/${lessonId}/assignments-to-lesson/${index}`} 
+            to={`/dashboard/course/${courseId}/lesson/${lessonId}/assignments-to-lesson/${assignment.id}`} 
             key={index} 
             className="block mb-4 p-5 border border-gray-300 rounded-lg shadow-sm hover:bg-blue-200 hover:border-blue-600 transition-all duration-200"
           >  

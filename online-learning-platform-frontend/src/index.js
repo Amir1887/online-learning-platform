@@ -106,7 +106,7 @@ const router = createBrowserRouter([
             </AssignmentProvider>
           )}, 
 
-          { path: 'course/:courseId/lesson/:lessonId/assignments-to-lesson/:index', 
+          { path: 'course/:courseId/lesson/:lessonId/assignments-to-lesson/:assignmentId', 
               element: (
               <AssignmentProvider>
               <SingleAssignmentPage />

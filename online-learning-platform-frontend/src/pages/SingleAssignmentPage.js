@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useAuth } from '@clerk/clerk-react';
 
 function SingleAssignmentPage() {
-    const {courseId, lessonId, index } = useParams();  // Get the assignment index from the URL
+    const {courseId, lessonId, assignmentId } = useParams();  // Get the assignment index from the URL
     const { assignments, isLoading, error } = useAssignment();
     const {userId} = useAuth();
 
@@ -23,7 +23,7 @@ function SingleAssignmentPage() {
         e.preventDefault();
 
         try {
-            const res = await axios.post(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/assignment-submit/${index}`, {
+            const res = await axios.post(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/assignment-submit/${assignmentId}`, {
                 userId,
                 answers
             });
@@ -34,7 +34,7 @@ function SingleAssignmentPage() {
     };
 
     // Convert the index to a number because `useParams` returns it as a string
-    const assignmentIndex = parseInt(index, 10);
+    const assignmentIndex = parseInt(assignmentId, 10);
 
     // If loading or error
     if (isLoading) return <p className="text-center text-gray-500">Loading...</p>;
