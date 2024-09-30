@@ -7,13 +7,13 @@ import { useAssignment } from '../context/AssignmentContext';
 
 function AssignmentToUserSide() {  
   const { courseId, lessonId } = useParams(); 
-  const { assignments, title, createdAt, isLoading, error } = useAssignment();
+  const { assignments, isLoading: isAssignmentLoading, error: assignmentError } = useAssignment();
 
   // If loading or error
   if (isLoading) return <p className="text-center text-blue-500">Loading...</p>;
   if (error) return <p className="text-center text-red-500">Error: {error}</p>;
-  const { courseId, lessonId } = useParams(); 
-  const { assignments, isLoading: isAssignmentLoading, error: assignmentError } = useAssignment();
+ 
+ 
   
   // const{ lesson,  isLoading, error} = useLesson();
   // console.log("lessonnnn", lesson);
