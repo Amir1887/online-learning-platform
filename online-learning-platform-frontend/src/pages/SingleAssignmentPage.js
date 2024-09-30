@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAssignment } from '../context/AssignmentContext';
+import axios from 'axios';
+import { useAuth } from '@clerk/clerk-react';
 
 function SingleAssignmentPage() {
-    const { index } = useParams();  // Get the assignment index from the URL
+    const {courseId, lessonId, index } = useParams();  // Get the assignment index from the URL
     const { assignments, isLoading, error } = useAssignment();
+    const {userId} = useAuth();
+
+    // State to track answers for each question
+    const [answers, setAnswers] = useState({});;
+
+    const handleAnswerChange = (questionIndex, value) => {
+        setAnswers(prev => ({
+            ...prev,
+            [questionIndex]: value
+        }));
+    };
+
+    const SubmitHandler = async (e) => {
+        e.preventDefault();
+
+        try {
+            const res = await axios.post(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/assignment-submit/${index}`, {
+                userId,
+                answers
+            });
+            console.log('Submission Response:', res.data);
+        } catch (err) {
+            console.error('Submission Error:', err);
+        }
+    };
 
     // Convert the index to a number because `useParams` returns it as a string
     const assignmentIndex = parseInt(index, 10);
@@ -20,7 +47,7 @@ function SingleAssignmentPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
+        <form className="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg" onSubmit={SubmitHandler}>
             <h2 className="text-2xl font-bold text-blue-800 mb-6">Assignment Title: {assignment.title}</h2>
 
             {assignment.assignments.questions.map((q, questionIndex) => (
@@ -29,15 +56,21 @@ function SingleAssignmentPage() {
                     <p className=" text-gray-600 mb-2"><strong>Type of Question:</strong> {q.selectedType}</p>
 
                     {q.selectedType === 'MCQs' && (
-                        <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select 
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => handleAnswerChange(questionIndex, e.target.value)}
+                        >
                             {q.mcqChoices.map((choice, i) => (
-                                <option key={i} value={choice}>{i + 1}. {choice}</option>
+                                <option  key={i} value={choice}>{i + 1}. {choice}</option>
                             ))}
                         </select>
                     )}
 
                     {q.selectedType === 'True & False' && (
-                        <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select 
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => handleAnswerChange(questionIndex, e.target.value)}
+                        >
                             {q.booleanChoices.map((choice, i) => (
                                 <option key={i} value={choice}>{i + 1}. {choice}</option>
                             ))}
@@ -49,11 +82,13 @@ function SingleAssignmentPage() {
                             type="text"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Write your answer here"
+                            onChange={(e) => handleAnswerChange(questionIndex, e.target.value)}
                         />
                     )}
                 </div>
             ))}
-        </div>
+            <button className='p-4 bg-gray-400 font-semibold rounded-xl hover:text-white hover:bg-blue-600' >Submit Your Answer</button>
+        </form>
     );
 }
 
