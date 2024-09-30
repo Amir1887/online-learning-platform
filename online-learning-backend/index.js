@@ -12,6 +12,7 @@ const checkUserTypeRouter = require('./routes/authRoutes');
 const lessonRouter = require('./routes/singleLessonRoute'); 
 const assignmentRouter = require('./routes/assignmentRoute'); 
 const assignmentGettingRouter = require('./routes/assignmentsGettingRoute'); 
+const assignmentSubmitRouter = require('./routes/assignmentSubmitRoute'); 
 const path = require('path');
 
 
@@ -45,6 +46,7 @@ app.use('/check-user-type', checkUserTypeRouter);
 app.use('/lesson', lessonRouter); 
 app.use('/', assignmentRouter); 
 app.use('/', assignmentGettingRouter); 
+app.use('/', assignmentSubmitRouter); 
 
 
 app.listen(port, () => {

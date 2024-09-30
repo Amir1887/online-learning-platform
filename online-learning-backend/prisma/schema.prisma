@@ -71,21 +71,21 @@ model Lesson {
   videopath      String?
   videourl       String
   createdAt      DateTime     @default(now())
-  assignments    Json?        @default("[]") 
-  // assignments    Assignment[] @relation("LessonAssignments")
+  assignments    Json?        @default("[]")
+  Assignment     Assignment[]
   course         Course       @relation(fields: [courseId], references: [id])
 }
 
 model Assignment {
-  id         Int          @id @default(autoincrement())
-  title      String
-  content    String?
-  courseId   Int
-  createdAt  DateTime     @default(now())
-  lessonId   Int?
-  course     Course       @relation(fields: [courseId], references: [id])
-  // lesson     Lesson?      @relation("LessonAssignments", fields: [lessonId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_lesson")
-  submission Submission[]
+  id          Int          @id @default(autoincrement())
+  title       String
+  courseId    Int
+  createdAt   DateTime     @default(now())
+  lessonId    Int?
+  assignments Json?        @default("[]")
+  course      Course       @relation(fields: [courseId], references: [id])
+  Lesson      Lesson?      @relation(fields: [lessonId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_lesson")
+  submission  Submission[]
 }
 
 model Category {
@@ -106,7 +106,7 @@ model Review {
 
 model Submission {
   id           Int        @id @default(autoincrement())
-  content      String
+  content      Json
   assignmentId Int
   userId       Int
   createdAt    DateTime   @default(now())
