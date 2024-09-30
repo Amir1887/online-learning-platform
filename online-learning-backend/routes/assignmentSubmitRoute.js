@@ -16,9 +16,16 @@ router.post('/course/:courseId/lesson/:lessonId/assignment-submit/:assignmentId'
     const { courseId, lessonId, assignmentId } = req.params;
     const { userId, answers } = req.body;
 
-    const userIdFK = await pool.query(
+    const userIdFKResult  = await pool.query(
         `SELECT id FROM "User" WHERE "authId" = $1`,[userId]
     );
+    
+        // Check if a user was found  
+        if (userIdFKResult.rows.length === 0) {  
+            return res.status(404).json({ error: 'User not found with the given authId' });  
+        }  
+
+        const userIdFK = userIdFKResult.rows[0].id; // Extract the user ID from the result 
 
     try {
         // Store assignment with assignment_data as JSONB
