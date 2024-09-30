@@ -15,7 +15,7 @@ function SingleAssignmentPage() {
     const handleAnswerChange = (questionIndex, value) => {
         setAnswers(prev => ({
             ...prev,
-            [questionIndex]: value
+            [questionIndex +1 ]: value
         }));
         console.log('Updated answers:', { ...answers, [questionIndex]: value }); // For debugging
     };
