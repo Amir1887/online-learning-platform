@@ -7,7 +7,7 @@ import { useAssignment } from '../context/AssignmentContext';
 
 function AssignmentToUserSide() {  
   const { courseId, lessonId } = useParams(); 
-  const { assignments, isLoading: isAssignmentLoading, error: assignmentError } = useAssignment();
+  const { assignments, isLoading, error } = useAssignment();
 
   // If loading or error
   if (isLoading) return <p className="text-center text-blue-500">Loading...</p>;
@@ -70,7 +70,7 @@ function AssignmentToUserSide() {
         <p className="text-center text-gray-500">This Lesson Has No Assignments</p>
       )}
     </div>  
-  );  
-}
+  </div> 
+)}
 
 export default AssignmentToUserSide;
