@@ -23,7 +23,7 @@ import SingleLessonPage from './pages/SingleLessonPage';
 import Enrollment from './pages/Enrollment';
 import AuthorProfilePage from './pages/AuthorProfilePage';
 
-import NotFoundPage from './pages/NotFoundPage';
+
 import ErrorBoundary from './ErrorBoundary.js';
 import { CourseProvider } from './context/MyCourseContext.js';
 import AddNewLesson from './pages/AddNewLesson.js';
@@ -131,7 +131,7 @@ const router = createBrowserRouter([
           { path: 'update-profile', element: <UpdateProfilePage /> },  // Accessible as /dashboard/update-profile
           { path: 'invoices', element: <InvoicesPage /> },  // Accessible as /dashboard/invoices
           { path: 'contact', element: <ContactPage /> },  // Accessible as /dashboard/contact
-          // { path: '*', element: <NotFoundPage /> },
+       
 
         ],
       },
