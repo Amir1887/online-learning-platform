@@ -36,7 +36,7 @@ function SingleAssignmentPage() {
             [questionIndex + 1]: value, // Store answers in a 1-based index  
         }));  
 
-        // Calculating immediate feedback  
+        // Immediate feedback (optional)  
         const isCorrect = value === correctAnswers[questionIndex];  
         const feedbackElement = document.getElementById(`feedback-${questionIndex}`);  
         feedbackElement.textContent = isCorrect ? `Correct!` : `Incorrect.`;  
@@ -133,13 +133,23 @@ function SingleAssignmentPage() {
             ) : (  
                 <div>  
                     <h2 className="text-2xl font-bold text-blue-800 mb-6">Your Submitted Answers:</h2>  
-                    {assignment.assignments.questions.map((q, questionIndex) => (  
-                        <div key={questionIndex} className="mb-4">  
-                            <p className="font-semibold text-gray-700 mb-2"><strong>Question {questionIndex + 1}:</strong> {q.question}</p>  
-                            <p className="text-gray-600 mb-2"><strong>Your Answer:</strong> {submittedAnswers[questionIndex + 1]}</p>  
-                            <p className="text-gray-600 mb-2"><strong>Correct Answer:</strong> {correctAnswers[questionIndex]}</p>  
-                        </div>  
-                    ))}  
+                    {assignment.assignments.questions.map((q, questionIndex) => {  
+                        const userAnswer = submittedAnswers[questionIndex + 1];  
+                        const correctAnswer = correctAnswers[questionIndex];  
+                        const isCorrect = userAnswer === correctAnswer;  
+                        return (  
+                            <div key={questionIndex} className="mb-4">  
+                                <p className="font-semibold text-gray-700 mb-2"><strong>Question {questionIndex + 1}:</strong> {q.question}</p>  
+                                <p  
+                                    className="text-gray-600 mb-2"  
+                                    style={{ color: isCorrect ? 'green' : 'red' }} // Conditional color
+                                >  
+                                    <strong>Your Answer:</strong> {userAnswer}  
+                                </p>  
+                                <p className="text-gray-600 mb-2"><strong>Correct Answer:</strong> {correctAnswer}</p>  
+                            </div>  
+                        );  
+                    })}  
                 </div>  
             )}  
         </div>  
