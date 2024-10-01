@@ -11,6 +11,9 @@ function SingleAssignmentPage() {
 
     // State to track answers for each question
     const [answers, setAnswers] = useState({});
+    
+    // To track submission result
+    const [submissionResult, setSubmissionResult] = useState(null);  
 
     const handleAnswerChange = (questionIndex, value) => {
         setAnswers(prev => ({
@@ -19,7 +22,7 @@ function SingleAssignmentPage() {
         }));
         console.log('Updated answers:', { ...answers, [questionIndex]: value }); // For debugging
     };
-
+  
     const SubmitHandler = async (e) => {
         e.preventDefault();
         console.log('Submitting answers:', answers);  // Log answers before submission
@@ -29,8 +32,25 @@ function SingleAssignmentPage() {
                 answers
             });
             console.log('Submission Response:', res.data);
+            setSubmissionResult(res);  // Set the submission result to state
+            console.log("submission result:", submissionResult)
+
+            // If submission is successful, compare answers
+             if (res.status === 201 || res.statusText === "Created") {
+                    await submitCompare();                  
+           }
         } catch (err) {
             console.error('Submission Error:', err);
+        }
+    };
+  
+
+    const submitCompare = async () => {
+        try {
+            const CompareRes = await axios.get(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/assignment-compare/${assignmentId}`);
+            console.log('Comparison Response:', CompareRes.data);
+        } catch (err) {
+            console.error('Comparison Error:', err);
         }
     };
 
