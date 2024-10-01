@@ -14,6 +14,7 @@ const assignmentRouter = require('./routes/assignmentRoute');
 const assignmentGettingRouter = require('./routes/assignmentsGettingRoute'); 
 const assignmentSubmitRouter = require('./routes/assignmentSubmitRoute'); 
 const comparingUserAnswerRouter = require('./routes/comparingUserAnswerRoute'); 
+const userIdGettingRouter = require('./routes/userIdGettingRoute'); 
 const path = require('path');
 
 
@@ -49,6 +50,7 @@ app.use('/', assignmentRouter);
 app.use('/', assignmentGettingRouter); 
 app.use('/', assignmentSubmitRouter); 
 app.use('/', comparingUserAnswerRouter); 
+app.use('/', userIdGettingRouter); 
 
 
 app.listen(port, () => {
