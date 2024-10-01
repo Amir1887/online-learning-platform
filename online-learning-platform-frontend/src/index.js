@@ -33,6 +33,7 @@ import AssingmentToUserSide from './pages/AssingmentToUserSide.js';
 import SingleAssignmentPage from './pages/SingleAssignmentPage.js';
 import { AssignmentProvider } from './context/AssignmentContext.js';
 import { LessonProvider } from './context/LessonContext.js';
+import { UsereProvider } from './context/UserContext.js';
 
 
 
@@ -109,7 +110,9 @@ const router = createBrowserRouter([
           { path: 'course/:courseId/lesson/:lessonId/assignments-to-lesson/:assignmentId', 
               element: (
               <AssignmentProvider>
+                <UsereProvider>
               <SingleAssignmentPage />
+               </UsereProvider>
               </AssignmentProvider>
             )}, 
 
