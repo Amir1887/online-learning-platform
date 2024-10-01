@@ -13,12 +13,11 @@ const pool = new Pool({
 
 router.get('/user/find-id-from-db/:userId', async (req, res) => { 
     const { userId } = req.params; 
-    // Extract query parameters
-    const { courseId, lessonId, assignmentId } = req.query; 
+  
 
     try {
         // Fetch the user based on authId
-        const result = await pool.query(`SELECT id, email, name, createdAt, updatedAt FROM "User" WHERE "authId" = $1`, [userId]);  
+        const result = await pool.query(`SELECT id, email, name, "createdAt", "updatedAt" FROM "User" WHERE "authId" = $1`, [userId]);  
         
         // Check if user exists and extract data safely
         if (result.rows.length === 0) {
