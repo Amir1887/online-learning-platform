@@ -11,25 +11,36 @@ const pool = new Pool({
   port: 5432,  
 });  
 
-
 router.get('/user/find-id-from-db/:userId', async (req, res) => { 
     const { userId } = req.params; 
-    const { courseId, lessonId, assignmentId } = req.query; //  extracting them  from query parameters  
-   
+    // Extract query parameters
+    const { courseId, lessonId, assignmentId } = req.query; 
 
     try {
-      // Fetch the assignment based on assignmentId and lessonId  
-        const userIdResult = await pool.query(  
-        `SELECT * FROM "User" WHERE "authId" = $1 `, [userId]);  
-         console.log("userId result", userIdResult);  
-        // Extracting the results  
-        const idResult = userIdResult.rows.length > 0 ? userIdResult.rows[0] : null; 
-        console.log("id after extraction from object", idResult);
-        res.status(200).json(idResult);   
+        // Fetch the user based on authId
+        const result = await pool.query(`SELECT id, email, name, createdAt, updatedAt FROM "User" WHERE "authId" = $1`, [userId]);  
+        
+        // Check if user exists and extract data safely
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const userData = result.rows[0];
+
+        // Create response object directly
+        const responseData = {
+            LoggedInUserId: userData.id,
+            LoggedInUserEmail: userData.email,
+            LoggedInUserName: userData.name,
+            LoggedInUserCreatedAt: userData.createdAt,
+            LoggedInUserUpdatedAt: userData.updatedAt,
+        };
+
+        return res.status(200).json(responseData);   
     } catch (error) {
         console.error('Error fetching userId:', error);  
-        res.status(500).json({ error: 'Internal server error' });  
+        return res.status(500).json({ error: 'Internal server error' });  
     }
- });
+});
 
- module.exports = router;
+module.exports = router;
