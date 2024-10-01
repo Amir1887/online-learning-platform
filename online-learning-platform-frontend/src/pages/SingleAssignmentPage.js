@@ -10,8 +10,9 @@ function SingleAssignmentPage() {
     const { userId } = useAuth();  
 
     const [answers, setAnswers] = useState({});  
-    const [submissionResult, setSubmissionResult] = useState(null);  
     const [correctAnswers, setCorrectAnswers] = useState([]);  
+    const [submittedAnswers, setSubmittedAnswers] = useState(null);  
+    const [showAnswers, setShowAnswers] = useState(false);  
 
     useEffect(() => {  
         const fetchCorrectAnswers = async () => {  
@@ -49,8 +50,12 @@ function SingleAssignmentPage() {
                 userId,  
                 answers  
             });  
-            console.log('Submission Response:', res.data);  
-            setSubmissionResult(res);  
+            console.log('Submission Response:', res);  
+            setSubmittedAnswers(answers); // Store submitted answers  
+
+            if (res.request.status === 201 || res.request.statusText === "Created") {  
+                setShowAnswers(true); // Show submitted answers  
+            }  
         } catch (err) {  
             console.error('Submission Error:', err);  
         }  
@@ -67,62 +72,77 @@ function SingleAssignmentPage() {
     }  
 
     return (  
-        <form className="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg" onSubmit={SubmitHandler}>  
-            <h2 className="text-2xl font-bold text-blue-800 mb-6">Assignment Title: {assignment.title}</h2>  
+        <div className="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">  
+            {!showAnswers ? (  
+            <form onSubmit={SubmitHandler}>  
+                <h2 className="text-2xl font-bold text-blue-800 mb-6">Assignment Title: {assignment.title}</h2>  
 
-            {assignment.assignments.questions.map((q, questionIndex) => (  
-                <div key={questionIndex} className="mb-6">  
-                    <p className="font-semibold text-gray-700 mb-4"><strong>Question {questionIndex + 1}:</strong> {q.question}</p>  
-                    <p className="text-gray-600 mb-2"><strong>Type of Question:</strong> {q.selectedType}</p>  
+                {assignment.assignments.questions.map((q, questionIndex) => (  
+                    <div key={questionIndex} className="mb-6">  
+                        <p className="font-semibold text-gray-700 mb-4"><strong>Question {questionIndex + 1}:</strong> {q.question}</p>  
+                        <p className="text-gray-600 mb-2"><strong>Type of Question:</strong> {q.selectedType}</p>  
 
-                    {q.selectedType === 'MCQs' && (  
-                        <div className="space-y-2">  
-                            {q.mcqChoices.map((choice, i) => (  
-                                <label key={i} className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">  
-                                    <input  
-                                        type="radio"  
-                                        name={`question-${questionIndex}`}  
-                                        value={choice}  
-                                        onChange={() => handleAnswerChange(questionIndex, choice)}  
-                                    />  
-                                    <span>{i + 1}. {choice}</span>  
-                                </label>  
-                            ))}  
+                        {q.selectedType === 'MCQs' && (  
+                            <div className="space-y-2">  
+                                {q.mcqChoices.map((choice, i) => (  
+                                    <label key={i} className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">  
+                                        <input  
+                                            type="radio"  
+                                            name={`question-${questionIndex}`}  
+                                            value={choice}  
+                                            onChange={() => handleAnswerChange(questionIndex, choice)}  
+                                        />  
+                                        <span>{i + 1}. {choice}</span>  
+                                    </label>  
+                                ))}  
+                            </div>  
+                        )}  
+
+                        {q.selectedType === 'True & False' && (  
+                            <div className="space-y-2">  
+                                {q.booleanChoices.map((choice, i) => (  
+                                    <label key={i} className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">  
+                                        <input  
+                                            type="radio"  
+                                            name={`question-${questionIndex}`}  
+                                            value={choice}  
+                                            onChange={() => handleAnswerChange(questionIndex, choice)}  
+                                        />  
+                                        <span>{choice}</span>  
+                                    </label>  
+                                ))}  
+                            </div>  
+                        )}  
+
+                        {q.selectedType === 'Text' && (  
+                            <div className="mt-2">  
+                                <input  
+                                    type="text"  
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"  
+                                    placeholder="Write your answer here"  
+                                    onChange={(e) => handleAnswerChange(questionIndex, e.target.value)}  
+                                />  
+                            </div>  
+                        )}  
+                        <div id={`feedback-${questionIndex}`} className="mt-1 text-lg font-semibold"></div>  
+                    </div>  
+                ))}  
+
+                <button className="p-4 bg-blue-500 text-white font-semibold rounded-xl hover:bg-blue-600">Submit Your Answer</button>  
+            </form>  
+            ) : (  
+                <div>  
+                    <h2 className="text-2xl font-bold text-blue-800 mb-6">Your Submitted Answers:</h2>  
+                    {assignment.assignments.questions.map((q, questionIndex) => (  
+                        <div key={questionIndex} className="mb-4">  
+                            <p className="font-semibold text-gray-700 mb-2"><strong>Question {questionIndex + 1}:</strong> {q.question}</p>  
+                            <p className="text-gray-600 mb-2"><strong>Your Answer:</strong> {submittedAnswers[questionIndex + 1]}</p>  
+                            <p className="text-gray-600 mb-2"><strong>Correct Answer:</strong> {correctAnswers[questionIndex]}</p>  
                         </div>  
-                    )}  
-
-                    {q.selectedType === 'True & False' && (  
-                        <div className="space-y-2">  
-                            {q.booleanChoices.map((choice, i) => (  
-                                <label key={i} className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">  
-                                    <input  
-                                        type="radio"  
-                                        name={`question-${questionIndex}`}  
-                                        value={choice}  
-                                        onChange={() => handleAnswerChange(questionIndex, choice)}  
-                                    />  
-                                    <span>{choice}</span>  
-                                </label>  
-                            ))}  
-                        </div>  
-                    )}  
-
-                    {q.selectedType === 'Text' && (  
-                        <div className="mt-2">  
-                            <input  
-                                type="text"  
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"  
-                                placeholder="Write your answer here"  
-                                onChange={(e) => handleAnswerChange(questionIndex, e.target.value)}  
-                            />  
-                        </div>  
-                    )}  
-                    <div id={`feedback-${questionIndex}`} className="mt-1 text-lg font-semibold"></div> {/* Feedback display */}  
+                    ))}  
                 </div>  
-            ))}  
-
-            <button className="p-4 bg-blue-500 text-white font-semibold rounded-xl hover:bg-blue-600">Submit Your Answer</button>  
-        </form>  
+            )}  
+        </div>  
     );  
 }  
 
