@@ -3,16 +3,18 @@ import { useParams } from 'react-router-dom';
 import { useAssignment } from '../context/AssignmentContext';  
 import axios from 'axios';  
 import { useAuth } from '@clerk/clerk-react';  
+import { useUser } from '../context/UserContext';
 
 function SingleAssignmentPage() {  
     const { courseId, lessonId, assignmentId } = useParams();  
     const { assignments, isLoading, error } = useAssignment();  
+    const {userIdFromDb} =   useUser();
     const { userId } = useAuth();  
 
     const [answers, setAnswers] = useState({});  
     const [correctAnswers, setCorrectAnswers] = useState([]);  
     const [userLastSubmisssion, setUserLastSubmisssion] = useState({});  
-    const [submittedAnswers, setSubmittedAnswers] = useState(null);  
+    const [submittedAnswers, setSubmittedAnswers] = useState({});  
     const [showAnswers, setShowAnswers] = useState(false);  
 
     useEffect(() => {  
@@ -74,7 +76,7 @@ function SingleAssignmentPage() {
 
     return (  
         <div className="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">  
-            {(!showAnswers && !userLastSubmisssion)? (  
+            {(!showAnswers)? (  
             <form onSubmit={SubmitHandler}>  
                 <h2 className="text-2xl font-bold text-blue-800 mb-6">Assignment Title: {assignment.title}</h2>  
 
