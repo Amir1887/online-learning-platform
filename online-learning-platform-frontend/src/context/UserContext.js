@@ -24,7 +24,7 @@ export const UsereProvider = ({ children }) => {
             setIsLoading(false);
           } catch (err) {
             console.error(err); // This helps with debugging
-            setError(err.response?.data?.message || "Failed to load course details");
+            setError(err.response?.data?.message || "Failed to load user details");
             setIsLoading(false);
           }
           
