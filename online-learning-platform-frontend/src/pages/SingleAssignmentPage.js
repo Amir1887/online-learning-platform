@@ -22,9 +22,30 @@ function SingleAssignmentPage() {
             try {  
                 const CompareRes = await axios.get(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/assignment-compare/${assignmentId}`);  
                 const { assignment, submissions } = CompareRes.data;  
+                console.log("pure submission from db",submissions);
                 const answersArray = assignment.assignments.questions.map(q => q.correctAnswer);    
                 setCorrectAnswers(answersArray); 
                 console.log('Correct Answers:', answersArray);  
+
+
+              // Check if user has already submitted  
+              console.log("userIdFromDb before:", userIdFromDb);  
+
+              const userIdFromSub = submissions.map(sub => sub.userId); // This is an array of userIds  
+              console.log("userId from sub before:", userIdFromSub);  
+  
+              const lastSubmission = submissions.find(sub => {  
+                  // Ensure comparison is made correctly, extracting the userId from the submission  
+                  const submissionUserId = Array.isArray(sub.userId) ? sub.userId[0] : sub.userId; // If sub.userId is an array, get the first element  
+                  return submissionUserId === userIdFromDb && sub.assignmentId === parseInt(assignmentId);  
+              });  
+              console.log("last submission", lastSubmission);  
+  
+              if (lastSubmission) {  
+                  setUserLastSubmisssion(lastSubmission); // Store the last submission  
+                  setSubmittedAnswers(lastSubmission.content); // Use submitted content for display  
+                  setShowAnswers(true);  // Trigger the display of answers  
+              }  
             } catch (err) {  
                 console.error('Comparison Error:', err);  
             }  
@@ -76,7 +97,7 @@ function SingleAssignmentPage() {
 
     return (  
         <div className="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">  
-            {(!showAnswers)? (  
+            {(!showAnswers && !userLastSubmisssion)? (  
             <form onSubmit={SubmitHandler}>  
                 <h2 className="text-2xl font-bold text-blue-800 mb-6">Assignment Title: {assignment.title}</h2>  
 
