@@ -11,6 +11,7 @@ function SingleAssignmentPage() {
 
     const [answers, setAnswers] = useState({});  
     const [correctAnswers, setCorrectAnswers] = useState([]);  
+    const [userLastSubmisssion, setUserLastSubmisssion] = useState({});  
     const [submittedAnswers, setSubmittedAnswers] = useState(null);  
     const [showAnswers, setShowAnswers] = useState(false);  
 
@@ -18,9 +19,9 @@ function SingleAssignmentPage() {
         const fetchCorrectAnswers = async () => {  
             try {  
                 const CompareRes = await axios.get(`http://localhost:4000/course/${courseId}/lesson/${lessonId}/assignment-compare/${assignmentId}`);  
-                const { assignment } = CompareRes.data;  
-                const answersArray = assignment.assignments.questions.map(q => q.correctAnswer);  
-                setCorrectAnswers(answersArray);  
+                const { assignment, submissions } = CompareRes.data;  
+                const answersArray = assignment.assignments.questions.map(q => q.correctAnswer);    
+                setCorrectAnswers(answersArray); 
                 console.log('Correct Answers:', answersArray);  
             } catch (err) {  
                 console.error('Comparison Error:', err);  
@@ -73,7 +74,7 @@ function SingleAssignmentPage() {
 
     return (  
         <div className="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">  
-            {!showAnswers ? (  
+            {(!showAnswers && !userLastSubmisssion)? (  
             <form onSubmit={SubmitHandler}>  
                 <h2 className="text-2xl font-bold text-blue-800 mb-6">Assignment Title: {assignment.title}</h2>  
 
