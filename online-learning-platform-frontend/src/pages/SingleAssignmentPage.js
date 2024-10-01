@@ -52,7 +52,7 @@ function SingleAssignmentPage() {
         };  
 
         fetchCorrectAnswers();  
-    }, [courseId, lessonId, assignmentId]);  
+    }, [courseId, lessonId, assignmentId, userIdFromDb]);  
 
     const handleAnswerChange = (questionIndex, value) => {  
         setAnswers(prev => ({  
@@ -77,7 +77,8 @@ function SingleAssignmentPage() {
             console.log('Submission Response:', res);  
             setSubmittedAnswers(answers); // Store submitted answers  
 
-            if (res.request.status === 201 || res.request.statusText === "Created") {  
+            //instead of res.request.status, as it directly checks the HTTP status code from the Axios response.
+            if (res.status === 201 || res.statusText === "Created") {  
                 setShowAnswers(true); // Show submitted answers  
             }  
         } catch (err) {  
@@ -97,7 +98,7 @@ function SingleAssignmentPage() {
 
     return (  
         <div className="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">  
-            {(!showAnswers && !userLastSubmisssion)? (  
+            {(!showAnswers && Object.keys(userLastSubmisssion).length === 0) ? (  
             <form onSubmit={SubmitHandler}>  
                 <h2 className="text-2xl font-bold text-blue-800 mb-6">Assignment Title: {assignment.title}</h2>  
 
