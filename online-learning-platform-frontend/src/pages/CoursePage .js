@@ -11,6 +11,11 @@ const CoursePage = () => {
   const { course,  isLoading,  error} = useCourse(); // Access the context 
   const { id } = useParams();  // Get course ID from the URL
   const {userType, loading} = useUserRole();
+
+    // State to track whether all lessons are shown
+    const [showAllLessons, setShowAllLessons] = useState(false);
+    // Determine whether to show all lessons or just the first 3  
+  const lessonsToShow = course && course.lessons ? (showAllLessons ? course.lessons : course.lessons.slice(0, 3)) : [];
  
 
 
@@ -73,7 +78,7 @@ if (loading) return <div>Loading...</div>;
 
   {course.lessons && course.lessons.length > 0 ? (
     <div className="space-y-4 ml-7">
-      {course.lessons.map((lesson, index) => (
+       {lessonsToShow.map((lesson, index) => (
         <Link
           to={`/dashboard/course/${course.id}/lesson/${lesson.lesson_id}`}
           key={lesson.lesson_id}
@@ -87,6 +92,15 @@ if (loading) return <div>Loading...</div>;
           </div>
         </Link>
       ))}
+          {/* Show More/Show Less Button */}
+           {course.lessons.length > 3 && (
+            <button
+              onClick={() => setShowAllLessons(!showAllLessons)}
+              className="text-blue-600 hover:underline mt-4 block"
+            >
+              {showAllLessons ? 'Show Less' : 'Show More'}
+            </button>
+          )}
     </div>
   ) : (
     <p className="text-gray-500">No lessons available for this course.</p>
