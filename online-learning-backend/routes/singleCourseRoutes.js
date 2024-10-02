@@ -54,14 +54,27 @@ router.get('/:id', async (req, res) => {
     JOIN "User" u ON u.id = e."userId"
     WHERE e."courseId" = $1 AND u."authId" = $2
   `;
+
+  //qeury to get assignments of the course
+// Adjust the assignmentQuery to also extract questions from assignments directly  
+const assignmetQuery = `  
+    SELECT a.title AS assignment_title,   
+           a."createdAt",   
+           a.assignments,   
+           l.title AS lesson_title  
+    FROM "Assignment" a  
+    JOIN "Lesson" l ON l.id = a."lessonId"  
+    WHERE a."courseId" = $1  
+`;
   
 
     // Fetch all data in parallel using Promise.all
-    const [courseResult, usersResult, enrollmentResult, singleAuthorResult] = await Promise.all([
+    const [courseResult, usersResult, enrollmentResult, singleAuthorResult, assignmentResult] = await Promise.all([
       pool.query(courseQuery, [id]),
       pool.query(usersQuery, [id]),
       pool.query(enrollmentQuery, [id, userId]), // Fetch enrollment status for the specific user     
       pool.query(singleAuthorCourses, [id]),    
+      pool.query(assignmetQuery, [id]),    
     ]);
 
     // Check if course exists
@@ -76,13 +89,23 @@ router.get('/:id', async (req, res) => {
      // Add singleAuthorResult to the courseData
     courseData.singleAuthorCourses = singleAuthorResult.rows;
 
+
+
+
+   // Process assignment results  
+   if (assignmentResult.rows.length > 0) {  
+    courseData.assignmetData = assignmentResult.rows;
+   } else{
+    courseData.assignmetData = null;
+   }   
+
     // Add enrollment status for the current user to the courseData
     if (enrollmentResult.rows.length > 0) {
       courseData.enrollmentStatus = enrollmentResult.rows[0];
     } else {
       courseData.enrollmentStatus = null; // User is not enrolled
     }
-
+    console.log("all course data",courseData);
     res.json(courseData);
   } catch (error) {
     console.error('Error fetching course:', error);
