@@ -137,12 +137,13 @@ if (loading) return <div>Loading...</div>;
     </Link>
   </div>
 <div className="my-8 ml-7">
-  {course.assignments && course.assignments.length > 0 ? (
+  {course.assignmetData && course.assignmetData.length > 0 ? (
     <div className="space-y-4">
-      {course.assignments.map((assignment, index) => (
+      {course.assignmetData.map((assignment, index) => (
         <div key={index} className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400">
-          <h3 className="font-semibold text-xl text-blue-600">Assignment: {assignment.title}</h3>
-          <p className="text-gray-600 mt-2">{assignment.content}</p>
+          <h3 className="font-semibold text-xl text-blue-600">Assignment: {assignment.assignment_title}</h3>
+          <p className="text-gray-600 mt-2">created At: {new Date(assignment.createdAt).toLocaleDateString()}</p>
+          <p className="text-gray-600 mt-2">On lesson: {assignment.lesson_title}</p>
         </div>
       ))}
     </div>
