@@ -17,7 +17,7 @@ function HomePage() {
       <Header />
       
       <div className="mt-8 w-full px-4 md:px-12 lg:px-24">
-      <h2 className="text-3xl font-bold mb-6 ">Our Available Courses:</h2>
+        <h2 className="text-3xl font-bold mb-6 ">Our Available Courses:</h2>
         {categories && categories.length > 0 ? (
           categories.map((category) => (
             <div key={category.id} className="mb-10">
@@ -43,6 +43,20 @@ function HomePage() {
                             <p className="mt-2 text-gray-600">{course.description}</p>
                             <p className="mt-2 text-sm text-gray-500">Created on: {new Date(course.createdAt).toLocaleDateString()}</p>
                             <p className="mt-1 text-sm text-gray-500">Last Updated on: {new Date(course.updatedAt).toLocaleDateString()}</p>
+                            {/* Author Info Section */}
+                            <div className="flex items-center mt-4">
+                              <img
+                                src={course.author_image}
+                                alt={course.author_name}
+                                className="rounded-full h-10 w-10 object-cover border-2 border-gray-300"
+                              />
+                              <div className="ml-3">
+                                <p className="text-sm font-medium text-gray-700">Created by: {course.author_name}</p>
+                                <p className="text-xs text-gray-500">Author</p>
+                              </div>
+                            </div>
+
+                          
                           </div>
                         </div>
                       </Link>
