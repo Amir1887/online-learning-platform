@@ -5,6 +5,7 @@ import algoliasearch from 'algoliasearch'; // this is the version in which saveO
 
 
 import { InstantSearch, SearchBox, Hits, Highlight, connectStateResults  } from 'react-instantsearch-dom';
+import { useCoursesCategories } from '../context/AllCoursesContext';
 
 
 const appID = "LBK71E9PXR";
@@ -51,16 +52,11 @@ const uploadDataToAlgolia = async () => {
 };
 
 const CoursesPage = () => {
-  const [categories, setCategories] = useState([]);
+  const {categories} = useCoursesCategories();
   const [courses, setCourses] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Fetch categories from the backend
-  useEffect(() => {
-    axios.get('http://localhost:4000/dashboard/categories')
-      .then(res => setCategories(res.data))
-      .catch(err => console.error(err));
-  }, []);
+
 
   // Fetch courses when a category is selected
   useEffect(() => {
