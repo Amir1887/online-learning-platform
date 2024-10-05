@@ -14,8 +14,14 @@ const pool = new Pool({
 // GET /courses
 router.get('/', async (req, res) => {
   const categoryId = parseInt(req.query.category, 10);
+  if (isNaN(categoryId)) {
+    return res.status(400).json({ error: 'Invalid category ID' }); // Checking for valid category ID
+  }
   try {
-    let query = 'SELECT * FROM "Course"';
+    let query = `SELECT c.*, a.name AS author_name, a.image AS author_image 
+    FROM "Course" c 
+    JOIN "Author" a ON c."authorId" = a.id`;
+
     const params = [];
 
     if (categoryId) {
@@ -28,6 +34,7 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error fetching courses:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+    return; // Prevents further execution
   }
 });
 
