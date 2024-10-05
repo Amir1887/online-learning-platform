@@ -5,10 +5,12 @@ import { Link, useParams } from 'react-router-dom';
 
 import UploadPhoto from './UploadPhoto';
 import useUserRole from '../useUserRole';
+import axios from 'axios';
 
 
 const CoursePage = () => {
   const { course,  isLoading,  error} = useCourse(); // Access the context 
+  console.log("course from single course page", course);
   const { id } = useParams();  // Get course ID from the URL
   const {userType, loading} = useUserRole();
 
@@ -20,8 +22,28 @@ const CoursePage = () => {
   //to conditionally render asignment
   const [showAllAssignments, setShowAllAssignments] =useState(false);
   const assignmentsToShow = course && course.assignmetData ? (showAllAssignments ? course.assignmetData: course.assignmetData.slice(0,3)) :[];
-
-
+  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(0); // To store the star rating
+  const [hover, setHover] = useState(0); // To highlight stars on hover
+  function handleReviews(e){
+    setReview(e.target.value);
+  }
+  function handleStarClick(ratingValue) {
+    setRating(ratingValue); // Capture the selected star rating
+  }
+ async function SubmitReviews(e){
+    e.preventDefault();
+    try {
+      const res = await axios.post(`http://localhost:4000/course/${id}/reviews`, {
+        review_content: review,
+        rating_count: rating, // Send the rating
+      });
+      console.log(res);
+    } catch (error) {
+      console.error("Error submitting review", error);
+    }
+    
+  }
 
 if (isLoading) return <div>Loading course...</div>;
 if (error) return <div>{error}</div>;
@@ -225,20 +247,74 @@ if (loading) return <div>Loading...</div>;
 <div>
   <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Ratings</h2>
 <div className="my-8 ml-7">
-  {course.reviews && course.reviews.length > 0 ? (
+  {course.totalReviews && course.totalReviews.length > 0 ? (
     <div className="space-y-4">
-      {course.reviews.map((rating, index) => (
+      {course.totalReviews.map((rating, index) => (
         <div key={index} className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400">
-          <h3 className="font-semibold text-xl text-blue-600">Rating: {rating.rating}</h3>
+          <h3 className="font-semibold text-xl text-blue-600">Rating: {rating.rating_count} Stars</h3>
           <p className="text-gray-600 mt-2">Review: {rating.review_content}</p>
-          <p className="text-gray-700 mt-1">Submitted by: {rating.reviewer_name}</p>
+          <p className="text-gray-700 mt-1">Submitted by: {rating.user_name}</p>
         </div>
       ))}
     </div>
   ) : (
     <p className="text-gray-500">No ratings available for this course.</p>
   )}
+
+  {/* submitting a review  */}
+  <p>Review The Course:</p>
+  <form onSubmit={SubmitReviews}>
+          <div className="flex items-center mb-4">
+            {/* Star Rating */}
+
+            {/* creates an array with 5 elements */}
+            {[...Array(5)].map((star, index) => { 
+              // ratingValue represents the star rating that will be captured when the user clicks on a star.
+              const ratingValue = index + 1;
+              return (
+                // For each star, return a label element.
+                <label key={index}>
+                  <input
+                    type="radio"
+                    name="rating"
+                    className="hidden"
+                    value={ratingValue}
+                    onClick={() => handleStarClick(ratingValue)}
+                  />
+                  {/* If ratingValue is less than or equal to the selected rating (rating) or hovered value (hover), the star turns yellow */}
+                  <svg
+                    className={`w-8 h-8 cursor-pointer ${
+                      ratingValue <= (hover || rating) ? "text-yellow-400" : "text-gray-300"
+                    }`}
+                    // highlights the star when the user hovers over it
+                    onMouseEnter={() => setHover(ratingValue)}
+                    // removes the highlight when the user moves the mouse away
+                    onMouseLeave={() => setHover(0)}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.684 5.192h5.462c.969 0 1.371 1.24.588 1.81l-4.415 3.206 1.684 5.192c.3.921-.755 1.688-1.54 1.106l-4.415-3.206-4.415 3.206c-.784.582-1.838-.185-1.54-1.106l1.684-5.192-4.415-3.206c-.784-.57-.38-1.81.588-1.81h5.462l1.684-5.192z" />
+                  </svg>
+                </label>
+              );
+            })}
+          </div>
+
+          <textarea
+            className="border border-blue-400 rounded-xl focus:border-blue-600 p-2 w-full mb-4"
+            onChange={handleReviews}
+            value={review}
+            placeholder="Write your review here..."
+          />
+
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+            Submit Your Review
+          </button>
+        </form>
+
 </div>
+
 </div>
 
 
