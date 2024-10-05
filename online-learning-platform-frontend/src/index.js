@@ -34,6 +34,7 @@ import SingleAssignmentPage from './pages/SingleAssignmentPage.js';
 import { AssignmentProvider } from './context/AssignmentContext.js';
 import { LessonProvider } from './context/LessonContext.js';
 import { UsereProvider } from './context/UserContext.js';
+import { CoursesCategoriesProvider } from './context/AllCoursesContext.js';
 
 
 
@@ -41,7 +42,11 @@ import { UsereProvider } from './context/UserContext.js';
 // NB: CourseSurrounderProvider only wraps routes where course/:id is involved. This reduces the risk of having id undefined in other non-course routes.
 const router = createBrowserRouter([
   {
-    element: <RootLayout />,
+    element:(
+      <CoursesCategoriesProvider>
+       <RootLayout />
+       </CoursesCategoriesProvider>
+      ),
     children: [
       // Public Routes (no need to be under /dashboard)
       { path: '/', element: <HomePage /> }, // Root-level routes
@@ -53,7 +58,9 @@ const router = createBrowserRouter([
       // Dashboard Layout (Nested routes inside /dashboard)
       {
         path: '/dashboard', // Dashboard prefix
-        element: <DashboardLayout />,
+        element:(
+           <DashboardLayout />
+          ),
         children: [
 
           { path: '', 
@@ -63,8 +70,19 @@ const router = createBrowserRouter([
             </ErrorBoundary>
           )}, // Dashboard root
 
-          { path: 'home', element: <HomePage /> },  // Accessible as /dashboard/home
-          { path: 'courses', element: <CoursesPage /> },  // Accessible as /dashboard/courses
+          { path: 'home', 
+            element: (
+              <CoursesCategoriesProvider>
+                <HomePage /> 
+              </CoursesCategoriesProvider>
+            ) 
+            },  // Accessible as /dashboard/home
+
+          { path: 'courses', element:(
+            <CoursesCategoriesProvider>
+              <CoursesPage />
+            </CoursesCategoriesProvider>
+            ) },  // Accessible as /dashboard/courses
 
           { path: 'course/:id',
             element: (
