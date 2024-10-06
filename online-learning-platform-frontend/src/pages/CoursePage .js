@@ -255,8 +255,27 @@ if (loading) return <div>Loading...</div>;
             className="border border-gray-300 shadow-lg rounded-lg p-6 transition hover:shadow-xl hover:border-blue-500 bg-white"
           >
             <h3 className="font-semibold text-xl text-blue-500">
-              {rating.rating_count} Stars
+              Rating:
             </h3>
+
+            {/* Display star icons based on the rating_count */}
+            <div className="flex items-center mb-3">
+              {/* making 5 copyies of svg */}
+              {[...Array(5)].map((star, starIndex) => (
+                <svg
+                  key={starIndex}
+                  className={`w-6 h-6 ${
+                    starIndex < rating.rating_count ? "text-yellow-400" : "text-gray-300"
+                  }`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.684 5.192h5.462c.969 0 1.371 1.24.588 1.81l-4.415 3.206 1.684 5.192c.3.921-.755 1.688-1.54 1.106l-4.415-3.206-4.415 3.206c-.784.582-1.838-.185-1.54-1.106l1.684-5.192-4.415-3.206c-.784-.57-.38-1.81.588-1.81h5.462l1.684-5.192z" />
+                </svg>
+              ))}
+            </div>
+
             <p className="text-gray-700 mt-3 text-lg">
               Review: {rating.review_content}
             </p>
