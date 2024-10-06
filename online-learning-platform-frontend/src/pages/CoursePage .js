@@ -244,78 +244,90 @@ if (loading) return <div>Loading...</div>;
 
 
 {/* RATINGS Section */}
-<div>
-  <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Ratings</h2>
-<div className="my-8 ml-7">
-  {course.totalReviews && course.totalReviews.length > 0 ? (
-    <div className="space-y-4">
-      {course.totalReviews.map((rating, index) => (
-        <div key={index} className="border border-gray-200 shadow-md rounded-lg p-4 transition hover:shadow-lg hover:border-blue-400">
-          <h3 className="font-semibold text-xl text-blue-600">Rating: {rating.rating_count} Stars</h3>
-          <p className="text-gray-600 mt-2">Review: {rating.review_content}</p>
-          <p className="text-gray-700 mt-1">Submitted by: {rating.user_name}</p>
-        </div>
-      ))}
-    </div>
-  ) : (
-    <p className="text-gray-500">No ratings available for this course.</p>
-  )}
-
-  {/* submitting a review  */}
-  <p>Review The Course:</p>
-  <form onSubmit={SubmitReviews}>
-          <div className="flex items-center mb-4">
-            {/* Star Rating */}
-
-            {/* creates an array with 5 elements */}
-            {[...Array(5)].map((star, index) => { 
-              // ratingValue represents the star rating that will be captured when the user clicks on a star.
-              const ratingValue = index + 1;
-              return (
-                // For each star, return a label element.
-                <label key={index}>
-                  <input
-                    type="radio"
-                    name="rating"
-                    className="hidden"
-                    value={ratingValue}
-                    onClick={() => handleStarClick(ratingValue)}
-                  />
-                  {/* If ratingValue is less than or equal to the selected rating (rating) or hovered value (hover), the star turns yellow */}
-                  <svg
-                    className={`w-8 h-8 cursor-pointer ${
-                      ratingValue <= (hover || rating) ? "text-yellow-400" : "text-gray-300"
-                    }`}
-                    // highlights the star when the user hovers over it
-                    onMouseEnter={() => setHover(ratingValue)}
-                    // removes the highlight when the user moves the mouse away
-                    onMouseLeave={() => setHover(0)}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.684 5.192h5.462c.969 0 1.371 1.24.588 1.81l-4.415 3.206 1.684 5.192c.3.921-.755 1.688-1.54 1.106l-4.415-3.206-4.415 3.206c-.784.582-1.838-.185-1.54-1.106l1.684-5.192-4.415-3.206c-.784-.57-.38-1.81.588-1.81h5.462l1.684-5.192z" />
-                  </svg>
-                </label>
-              );
-            })}
+<div className="max-w-4xl mx-auto my-12">
+  <h2 className="text-3xl font-bold text-gray-800 mb-8 border-b-2 pb-4">Ratings</h2>
+  <div className="my-8 ml-7">
+    {course.totalReviews && course.totalReviews.length > 0 ? (
+      <div className="space-y-6">
+        {course.totalReviews.map((rating, index) => (
+          <div
+            key={index}
+            className="border border-gray-300 shadow-lg rounded-lg p-6 transition hover:shadow-xl hover:border-blue-500 bg-white"
+          >
+            <h3 className="font-semibold text-xl text-blue-500">
+              {rating.rating_count} Stars
+            </h3>
+            <p className="text-gray-700 mt-3 text-lg">
+              Review: {rating.review_content}
+            </p>
+            <p className="text-gray-600 mt-1">
+              <span className="font-medium">Submitted by:</span> {rating.user_name}
+            </p>
           </div>
+        ))}
+      </div>
+    ) : (
+      <p className="text-gray-500 text-lg">No ratings available for this course.</p>
+    )}
 
-          <textarea
-            className="border border-blue-400 rounded-xl focus:border-blue-600 p-2 w-full mb-4"
-            onChange={handleReviews}
-            value={review}
-            placeholder="Write your review here..."
-          />
+    {/* Submitting a review */}
+    <div className="mt-12">
+      <h3 className="text-xl font-semibold text-gray-700 mb-2">Submit Your Review:</h3>
+      
+      <form onSubmit={SubmitReviews}>
+        {/* Star Rating */}
+        <div className="flex items-center mb-5 space-x-2">
+          {/* creates an array with 5 elements */}
+          {[...Array(5)].map((star, index) => {
+            // ratingValue represents the star rating that will be captured when the user clicks on a star.
+            const ratingValue = index + 1;
+            return (
+              // For each star, return a label element.
+              <label key={index} className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="rating"
+                  className="hidden"
+                  value={ratingValue}
+                  onClick={() => handleStarClick(ratingValue)}
+                />
+                {/* If ratingValue is less than or equal to the selected rating (rating) or hovered value (hover), the star turns yellow */}
+                <svg
+                  className={`w-10 h-10 transition ${
+                    ratingValue <= (hover || rating) ? "text-yellow-400" : "text-gray-300"
+                  }`}
+                  // highlights the star when the user hovers over it
+                  onMouseEnter={() => setHover(ratingValue)}
+                  // removes the highlight when the user moves the mouse away
+                  onMouseLeave={() => setHover(0)}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.684 5.192h5.462c.969 0 1.371 1.24.588 1.81l-4.415 3.206 1.684 5.192c.3.921-.755 1.688-1.54 1.106l-4.415-3.206-4.415 3.206c-.784.582-1.838-.185-1.54-1.106l1.684-5.192-4.415-3.206c-.784-.57-.38-1.81.588-1.81h5.462l1.684-5.192z" />
+                </svg>
+              </label>
+            );
+          })}
+        </div>
 
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
-            Submit Your Review
-          </button>
-        </form>
+        {/* Review Text Area */}
+        <textarea
+          className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 p-3 w-full mb-6 h-32 resize-none"
+          onChange={handleReviews}
+          value={review}
+          placeholder="Write your review here..."
+        />
 
+        {/* Submit Button */}
+        <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+          Submit Review
+        </button>
+      </form>
+    </div>
+  </div>
 </div>
 
-</div>
 
 
   {/* enrollment Section */}
