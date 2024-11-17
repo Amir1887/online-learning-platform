@@ -6,10 +6,12 @@ import { Link, useParams } from 'react-router-dom';
 import UploadPhoto from './UploadPhoto';
 import useUserRole from '../useUserRole';
 import axios from 'axios';
+import { useUser } from '../context/UserContext';
 
 
 const CoursePage = () => {
   const { course,  isLoading,  error} = useCourse(); // Access the context 
+  const {userIdFromDb} = useUser();
   console.log("course from single course page", course);
   const { id } = useParams();  // Get course ID from the URL
   const {userType, loading} = useUserRole();
@@ -37,6 +39,7 @@ const CoursePage = () => {
       const res = await axios.post(`http://localhost:4000/course/${id}/reviews`, {
         review_content: review,
         rating_count: rating, // Send the rating
+        userIdFromDb,
       });
       console.log(res);
     } catch (error) {

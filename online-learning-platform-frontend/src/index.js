@@ -88,7 +88,9 @@ const router = createBrowserRouter([
             element: (
               <ErrorBoundary>
                 <CourseProvider>
+                <UsereProvider>    
                 <CoursePage />
+                </UsereProvider> 
                 </CourseProvider>
               </ErrorBoundary>
             )},  // Accessible as /dashboard/course/:id

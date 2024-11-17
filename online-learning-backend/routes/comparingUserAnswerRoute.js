@@ -24,7 +24,7 @@ router.get('/course/:courseId/lesson/:lessonId/assignment-compare/:assignmentId'
 
         // Fetch submissions for the given assignmentId  
         const submissionResult = await pool.query(  
-            `SELECT content FROM "Submission" WHERE "assignmentId" = $1`,  
+            `SELECT content, "assignmentId", "userId", "createdAt" FROM "Submission" WHERE "assignmentId" = $1`,  
             [assignmentId]  
         );  
         console.log("submission result", submissionResult);  
